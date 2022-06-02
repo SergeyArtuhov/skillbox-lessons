@@ -1,0 +1,2364 @@
+
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task2.py:
+# Задача 2. Поиск файла 2
+#
+# Как мы помним, скрипты — это просто куча строк текста, хоть они и понятны только программисту.
+# Таким образом, с ними можно работать точно так же, как и с обычными текстовыми файлами.
+#
+# Используя функцию поиска файла из предыдущего урока, реализуйте программу,
+# которая находит внутри указанного пути все файлы с искомым названием
+# и выводит на экран текст одного из них (выбор можно сгенерировать случайно).
+#
+# Подсказка: можно использовать, например, список для сохранения найденного пути.
+
+import os
+import random
+
+
+def file_finder(cur_path, file, my_list):
+    for i_elem in os.listdir(cur_path):
+        path = os.path.join(cur_path, i_elem)
+        if file == i_elem:
+            my_list.append(path)
+        if os.path.isdir(path):
+            file_finder(path, file, my_list)
+
+
+files = list()
+folder_name = input('Ищем в: ')
+file_name = input('Имя файла: ')
+
+file_finder(folder_name, file_name, files)
+number_of_file = random.randint(0, len(files) - 1)
+file = open(files[number_of_file], 'r', encoding='utf-8')
+data = file.read()
+print(data)
+file.close()
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task1.py:
+# Задача 1. Результаты
+#
+# Одному программисту дали задачу для обработки неких результатов тестирования двух групп людей.
+# Файл первой группы (group_1.txt) находится в папке task, файл второй группы (group_2.txt) — в папке Additional_info.
+#
+# Содержимое файла group_1.txt
+# Бобровский Игорь 10
+# Дронов Александр 20
+# Жуков Виктор 30
+#
+# Содержимое файла group_2.txt
+# Павленко Геннадий 20
+# Щербаков Владимир 35
+# Marley Bob 15
+#
+# На экран нужно было вывести сумму очков первой группы,
+# затем разность очков опять же первой группы и напоследок — произведение очков уже второй группы.
+#
+# Программист оказался не очень опытным, писал код наобум и даже не стал его проверять.
+# И оказалось, этот код просто не работает. Вот что он написал:
+#
+# Исправьте код для решения поставленной задачи.
+# Для проверки результата создайте необходимые папки (task, Additional_info, Dont touch me)
+# на своём диске в соответствии с картинкой и также добавьте файлы group_1.txt и group_2.txt.
+
+file = open('/Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/group_1.txt',
+            'r', encoding='utf-8')
+summa = 0
+for i_line in file:
+    info = i_line.split()
+    summa += int(info[2])
+
+file = open('/Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/group_1.txt',
+            'r', encoding='utf-8')
+diff = 0
+for i_line in file:
+    info = i_line.split()
+    diff -= int(info[2])
+
+file_2 = open('/Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/Additional_info/group_2.txt',
+              'r', encoding='utf-8')
+compose = 1
+for i_line in file_2:
+    info = i_line.split()
+    compose *= int(info[2])
+
+print(summa)
+print(diff)
+print(compose)
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/group_1.txt:
+Бобровский Игорь 10
+Дронов Александр 20
+Жуков Виктор 30
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/Additional_info/group_2.txt:
+Павленко Геннадий 20
+Щербаков Владимир 35
+Marley Bob 15
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson4/numbers.txt:
+1
+2
+3
+4
+10
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson4/scripts.txt:
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson4/task2.py:
+# Задача 2. Всё в одном
+#
+# Ваш друг, который тоже проходит курс Python Basic, поехал с ноутбуком в другой город, и там у него случилась беда:
+# его диск пришлось отформатировать, а доступ в интернет отсутствует. Остался только телефон с мобильным интернетом.
+# Так как со связью (и с памятью) проблемы, друг попросил вас скинуть одним файлом все решения и скрипты,
+# которые у вас сейчас есть.
+#
+# Напишите программу, которая копирует код каждого скрипта в папке проекта python_basic в файл scripts.txt,
+# разделяя код строкой из 40 символов *.
+#
+# Пример содержимого файла scripts.txt:
+
+import os
+
+
+def finder(curr_path):
+    for i_elem in os.listdir(curr_path):
+        path = os.path.join(curr_path, i_elem)
+        if os.path.isfile(path) and not path.endswith('.DS_Store'):
+            print(f'Переходим к файлу {path}')
+            file = open(path, 'r', encoding='utf-8')
+            data = file.read()
+            scripts.write(f'\nСодержимое файла {path}:\n')
+            scripts.write(f'{data}\n')
+            scripts.write('*' * 40)
+            file.close()
+        elif os.path.isdir(path):
+            print(f'Это папка: {path}')
+            print(f'Переходим в неё')
+            finder(path)
+
+
+
+scripts = open('scripts.txt', 'w')
+folder = '/Users/artuhovse/PycharmProjects/SkillBox_lessons'
+finder(folder)
+scripts.close()
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson4/task1.py:
+# Задача 1. Сумма чисел
+#
+# Во входном файле numbers.txt записано N целых чисел, каждое в отдельной строке.
+# Напишите программу, которая выводит их сумму в выходной файл answer.txt.
+#
+# Пример:
+# Содержимое файла numbers.txt:
+# 1
+# 2
+# 3
+# 4
+# 10
+#
+# Содержимое файла answer.txt
+# 20
+
+numbers = open('numbers.txt', 'r')
+summa = 0
+for i_number in numbers:
+    summa += int(i_number)
+numbers.close()
+
+answer = open('answer.txt', 'w')
+answer.write(str(summa))
+answer.close()
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson4/answer.txt:
+20
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson2/task2.py:
+# Задача 2. Поиск файла
+#
+# В уроке мы написали функцию, которая ищет нужный нам файл во всех подкаталогах указанной директории.
+# Однако, как мы понимаем, файлов с таким названием может быть несколько.
+#
+# Напишите функцию, которая принимает на вход абсолютный путь до директории и имя файла,
+# проходит по всем вложенным файлам и папкам и выводит на экран все абсолютные пути с этим именем.
+#
+# Пример:
+#
+# Ищем в: C:/Users/Roman/PycharmProjects/Skillbox
+# Имя файла: lesson2
+#
+# Найдены следующие пути:
+# C:/Users/Roman/PycharmProjects/Skillbox\Module15\lesson2.py
+# C:/Users/Roman/PycharmProjects/Skillbox\Module16\lesson2.py
+# C:/Users/Roman/PycharmProjects/Skillbox\Module17\lesson2.py
+# C:/Users/Roman/PycharmProjects/Skillbox\Module18\lesson2.py
+# C:/Users/Roman/PycharmProjects/Skillbox\Module19\lesson2.py
+# C:/Users/Roman/PycharmProjects/Skillbox\Module20\lesson2.py
+# C:/Users/Roman/PycharmProjects/Skillbox\Module21\lesson2.py
+# C:/Users/Roman/PycharmProjects/Skillbox\Module22\lesson2.py
+
+import os
+
+
+def file_finder(cur_path, file):
+    for i_elem in os.listdir(cur_path):
+        path = os.path.join(cur_path, i_elem)
+        if file == i_elem:
+            print(path)
+        if os.path.isdir(path):
+            file_finder(path, file)
+
+
+folder_name = input('Ищем в: ')
+file_name = input('Имя файла: ')
+
+print('Найдены следующие пути: ')
+file_finder(folder_name, file_name)
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson2/task1.py:
+# Задача 1. Иконки
+#
+# Андрей для себя хочет сделать экспериментальный сайт, где будет красиво отображаться вся структура его диска:
+# папки одними иконками, файлы — другими. Поэтому ему нужен код, который поможет определить, какой тип иконки вставить.
+#
+# Напишите программу, которая по заданному абсолютному пути определяет,
+# на что указывает этот путь (на директорию, файл, или же путь является ссылкой), и выведите соответствующее сообщение.
+# Если путь указывает на файл, то также выведите его размер (сколько он весит в байтах).
+# Обеспечьте контроль ввода: проверка пути на существование.
+#
+# Подсказка: для вывода размера файла поищите соответствующий метод.
+#
+# Пример 1:
+# Путь: C:\Users\Roman\PycharmProjects\Skillbox\Module17\lesson2.py
+# Это файл
+# Размер файла: 605 байт
+#
+# Пример 2:
+# Путь: C:\Users\Roman\PycharmProjects\Skillbox\Module17\lesson2.py
+# Указанного пути не существует
+
+import os
+
+path = input('Путь: ')
+if os.path.exists(path):
+
+    if os.path.isdir(path):
+        print('Это папка')
+    elif os.path.isfile(path):
+        size = os.path.getsize(path)
+        print('Это файл')
+        print(f'Размер файла: {size} байт')
+    elif os.path.islink(path):
+        print('Это ссылка')
+
+else:
+    print('Указанного пути не существует')
+
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson1/task3.py:
+# Задача 3. Корень диска
+#
+# Напишите программу, которая выводит на экран только корень диска,
+# на котором запущен скрипт. Учтите, что скрипт может быть запущен где угодно и при любой вложенности папок.
+#
+# Результат программы на примере диска G:
+#
+# Корень диска: G:\\
+
+import os
+result = os.path.abspath(os.path.sep)
+print(result)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson1/task2.py:
+# Задача 2. Содержимое
+#
+# Выберите любую директорию на своём диске и затем напишите программу,
+# выводящую на экран абсолютные пути к файлам и папкам, которые находятся внутри этой директории.
+#
+# Результат программы на примере директории проекта python_basic:
+#
+# Содержимое каталога G:\PycharmProjects\python_basic
+#     G:\PycharmProjects\python_basic\.git
+#     G:\PycharmProjects\python_basic\.idea
+#     G:\PycharmProjects\python_basic\Module14
+#     G:\PycharmProjects\python_basic\Module15
+#     G:\PycharmProjects\python_basic\Module16
+#     G:\PycharmProjects\python_basic\Module17
+#     G:\PycharmProjects\python_basic\Module18
+#     G:\PycharmProjects\python_basic\Module19
+#     G:\PycharmProjects\python_basic\Module20
+#     G:\PycharmProjects\python_basic\Module21
+#     G:\PycharmProjects\python_basic\Module22
+
+import os
+
+directory = 'SkillBox_lessons'
+dir_path = os.path.abspath(os.path.join('..', '..', '..', directory))
+for elem in os.listdir(dir_path):
+    path = os.path.join(dir_path, elem)
+    print('   ', path)
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson1/task1.py:
+# Задача 1. Сисадмин
+#
+# Вы работаете системным администратором в одной компании.
+# На диске каждого сотрудника компании в специальной папке access лежит файл admin.bat.
+# Этот файл предназначен для вас, и вам нужен путь до этого файла, причём как относительный, так и абсолютный.
+# Недолго думая, вы решили написать небольшой скрипт, который закинете по сети к этому файлу.
+#
+# Напишите программу, которая выводит на экран относительный и абсолютный пути до файла admin.bat.
+#
+# Пример результата:
+#
+# Абсолютный путь до файла: C:\Users\Roman\PycharmProjects\Skillbox\access\admin.bat
+# Относительный путь до файла: Skillbox\access\admin.bat
+
+import os
+
+name = 'admin.bat'
+folder = 'access'
+
+abs_path = os.path.abspath(os.path.join(folder, name))
+path = os.path.join('lesson1', folder, name)
+
+print('Абсолютный путь до файла:', abs_path)
+print('Относительный путь до файла:', path)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module16/lesson3.py:
+# task 1
+
+# main = [1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1]
+# first_company = [0, 0, 0]
+# second_company = [1, 0, 0, 1, 1]
+# third_company = [1, 1, 1, 0, 1]
+# main.extend(first_company)
+# main.extend(second_company)
+# main.extend(third_company)
+#
+# print('Общий список задач:', main)
+# print('Кол-во невыполненных задач:', main.count(0))
+
+# task 2
+
+# first_message = input('Первое сообщение: ')
+# second_message = input('Второе сообщение: ')
+# if list(first_message).count('!') > list(second_message).count('?'):
+#     first_message += second_message
+#     print(first_message)
+# elif list(first_message).count('!') < list(second_message).count('?'):
+#     second_message += first_message
+#     print(second_message)
+# else:
+#     print('Ой!')
+
+# task 3
+
+# pack = []
+# decode = []
+# N = int(input('Кол-во пакетов: '))
+# bad_pack = 0
+# for i in range(N):
+#     print('\nПакет номер', i + 1)
+#     for bit in range (4):
+#         print(f'{bit + 1} бит:', end=' ')
+#         pack.append(int(input()))
+#     if pack.count(-1) <= 1:
+#         decode.extend(pack)
+#     else:
+#         print('Много ошибок в пакете.')
+#         bad_pack += 1
+#     pack = []
+#
+# print(f'\nПолученное сообщение: {decode}')
+# print(f'Кол-во ошибок в сообщении: {decode.count(-1)}')
+# print(f'Кол-во потерянных пакетов: {bad_pack}')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module16/lesson2.py:
+# task 1
+
+# zoo = ['lion', 'kangaroo', 'elephant', 'monkey']
+# zoo.insert(1, 'bear')
+# zoo.remove('elephant')
+# i_lion = zoo.index('lion')
+# i_monkey = zoo.index('monkey')
+# print('Зоопарк:', zoo)
+# print(f'Лев сидит в клетке номер {i_lion + 1}')
+# print(f'Обезьяна сидит в клетке номер {i_monkey + 1}')
+
+# task 2
+
+# N = int(input('Кол-во сотрудников: '))
+# salary_list = []
+# workers_count = 0
+# for num in range(N):
+#     print(f'Зарплата {num + 1} сотрудника: ', end='')
+#     salary = int(input())
+#     if salary != 0:
+#         salary_list.append(salary)
+#         workers_count += 1
+# print()
+# print(f'Осталось сотрудников: {workers_count}')
+# print(f'Зарплаты: {salary_list}')
+# print(f'Максимальная зп: {max(salary_list)}')
+# print(f'Минимальная зп: {min(salary_list)}')
+
+# task 3
+
+def film_exist(movie, films):
+    for i_movie in films:
+        if i_movie == movie:
+            return True
+    return False
+
+films = [
+    'Крепкий орешек', 'Назад в будущее', 'Таксист',
+    'Леон', 'Богемская рапсодия', 'Город грехов',
+    'Мементо', 'Отступники', 'Деревня',
+    'Проклятый остров', 'Начало', 'Матрица'
+]
+my_films = []
+
+while True:
+    print('Ваш текущий топ фильмов:', my_films)
+    new_movie = input('Название фильма: ')
+    if film_exist(new_movie, films):
+        print('Команды: добавить, вставить, удалить')
+        command = input('Введите команду: ')
+        if command.lower() == 'добавить':
+            if not film_exist(new_movie, my_films):
+                my_films.append(new_movie)
+            else:
+                print('Этот фильм уже есть в вашем списке')
+        elif command.lower() == 'вставить':
+            if not film_exist(new_movie, my_films):
+                index = int(input('На какое место поставить фильм?'))
+                my_films.insert(index - 1, new_movie)
+        elif command.lower() == 'удалить':
+            if film_exist(new_movie, my_films):
+                my_films.remove(new_movie)
+    else:
+        print('Такого фильма нет в нашем списке')
+    print()
+
+
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module16/lesson4.py:
+# task 1
+
+# matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+# for i in matrix:
+#     for k in i:
+#         print(k, end=' ')
+#     print()
+
+# task 2
+
+# N = int(input('Кол-во участников: '))
+# K = int(input('Кол-во человек в команде: '))
+# team_list = []
+# z = 1
+# if N % K == 0:
+#     for _ in range(N // K):
+#         team_list.append(list(range(z, z + K)))
+#         z += K
+#     print('Общий список команд:', team_list)
+# else:
+#     print(f'{N} участников невозможно поделить на команды по {K} человек')
+
+# task 3
+
+goods = [["яблоки", 50], ["апельсины", 190], ["груши", 100], ["нектарины", 200], ["бананы", 77]]
+new_goods = []
+print('Текущий ассортимент:', goods)
+
+fruit_name = input('\nНовый фрукт: ')
+price = int(input('Цена: '))
+
+new_goods.extend(goods)
+new_goods.append([fruit_name, price])
+print('Новый ассортимент:', new_goods)
+
+for i in new_goods:
+    i[1] = round(i[1] * 1.08, 2)
+print('Новый ассортимент с увел. ценой:', new_goods)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson3/task3.py:
+# Задача 3. Универсальная программа
+#
+# Один заказчик попросил нас написать небольшой скрипт для своих криптографических нужд.
+# При этом он заранее предупредил, что скрипт должен уметь работать с любым итерируемым типом данных.
+#
+# Напишите функцию, которая возвращает список из элементов итерируемого объекта
+# (кортежа, строки, списка, словаря), у которых индекс чётный.
+#
+# Пример 1:
+#
+# Допустим, есть такая строка: 'О Дивный Новый мир!'
+#
+# Результат: ['О', 'Д', 'в', 'ы', ' ', 'о', 'ы', ' ', 'и', '!']
+#
+# Пример 2:
+#
+# Допустим, есть такой список: [100, 200, 300, 'буква', 0, 2, 'а']
+#
+# Результат: [100, 300, 0, 'а']
+#
+# Примечание: для проверки типа можно использовать функцию
+# isinstance(<элемент>, <тип данных>), которая возвращает True,
+# если элемент принадлежит к этому типу данных, и возвращает False в противном случае.
+
+def my_func(data):
+    my_list = [symbol for symbol in data[::2]]
+    return my_list
+
+
+object = 100
+
+if isinstance(object, (dict, list, tuple, str)):
+    print('Результат', my_func(object))
+else:
+    print('Неитерируемый объект')
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson3/task2.py:
+# Задача 2. Словари из списков
+#
+# Создайте два списка, в каждом из которых лежит 10 случайных букв алфавита (могут повторяться).
+# Затем для каждого списка создайте словарь из пар «индекс — значение» и выведите оба словаря на экран.
+#
+# Подсказка: random
+#
+# Пример:
+#
+# Первый список: ['й', 'р', 'с', 'г', 'а', 'а', 'т', 'ж', 'е', 'к']
+# Второй список: ['д', 'а', 'а', 'в', 'т', 'ж', 'р', 'б', 'й', 'р']
+#
+# Первый словарь: {0: 'й', 1: 'р', 2: 'с', 3: 'г', 4: 'а', 5: 'а', 6: 'т', 7: 'ж', 8: 'е', 9: 'к'}
+# Второй словарь: {0: 'д', 1: 'а', 2: 'а', 3: 'в', 4: 'т', 5: 'ж', 6: 'р', 7: 'б', 8: 'й', 9: 'р'}
+
+import random
+alphabet = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
+first_list = [alphabet[random.randint(1, len(alphabet))] for symbol_1 in range(10)]
+second_list = [alphabet[random.randint(1, len(alphabet))] for symbol_2 in range(10)]
+my_dict_1 = {index_1: symbol_1 for index_1, symbol_1 in enumerate(first_list)}
+my_dict_2 = {index_2: symbol_2 for index_2, symbol_2 in enumerate(second_list)}
+
+print(f'Первый список: {first_list}')
+print(f'Второй список: {second_list}')
+
+print(f'\nПервый словарь: {my_dict_1}')
+print(f'Второй словарь: {my_dict_2}')
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson3/task1.py:
+# Задача 1. Саботаж!
+#
+# Какой-то нехороший человек решил подпортить жизнь frontend-разработчикам
+# и добавил в код сайта символ ~ (тильда).
+# Но программисты быстро решили эту проблему, пройдясь по всему коду маленькой программой.
+#
+# Пользователь вводит строку. Напишите программу,
+# которая проходит по строке и выводит в консоль индексы символа ~.
+# Для решения этой задачи (и остальных тоже) используйте функцию enumerate.
+#
+# Пример:
+#
+# Строка: so~mec~od~e
+#
+# Ответ: 2 6 9
+
+text = input('Строка: ')
+error = list()
+for index, symbol in enumerate(text):
+    if symbol == '~':
+        error.append(index)
+print('Ответ:', *error)
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson4/task3.py:
+# Задача 3. В одну строчку
+#
+# Нашему другу дали задачу: «Есть словарь, в котором ключи - это числа от 0 до 4,
+# а значения ключей — числа 0, 100, 144 и 19 соответственно. Нужно написать программу,
+# которая выводит список тех значений, у которых ключ делится на 2.
+# Причём программа должна быть в одну строчку.»
+# Программа у друга работает, но её не приняли, так как в ней не используется правило
+# «не повторяйся» — это когда части кода не повторяются.
+# Помогите другу исправить решение задачи так, чтобы код в строчке не повторялся.
+#
+# Решение друга:
+# print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key]
+# for i_key in {0: 0, 1: 100, 2: 144, 3: 20, 4: 19} if i_key % 2 == 0])
+
+print([i_value for i_key, i_value in {0: 0, 1: 100, 2: 144, 3: 20, 4: 19}.items() if i_key % 2 == 0])
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson4/task2.py:
+# Задача 2. Сервер
+#
+# У вас есть данные о сервере, которые хранятся в виде вот такого словаря:
+#
+# server_data = {
+#     "server": {
+#         "host": "127.0.0.1",
+#         "port": "10"
+#     },
+#     "configuration": {
+#         "access": "true",
+#         "login": "Ivan",
+#         "password": "qwerty"
+#     }
+# }
+#
+# Напишите программу, которая выводит для пользователя эти данные так же красиво и понятно,
+# как они представлены в словаре.
+#
+# Результат работы программы:
+# server:
+#     host: 127.0.0.1
+#     port: 10
+# configuration:
+#     access: true
+#     login: Ivan
+#     password: qwerty
+
+server_data = {
+    "server": {
+        "host": "127.0.0.1",
+        "port": "10"
+    },
+    "configuration": {
+        "access": "true",
+        "login": "Ivan",
+        "password": "qwerty"
+    }
+}
+
+for i_key, i_value in server_data.items():
+    print(f'{i_key}:')
+    for j_key, j_value in i_value.items():
+        print(f'\t{j_key}: {j_value}')
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson4/task1.py:
+# Задача 1. Кризис миновал
+#
+# Закупки грейпфрутов прекратились, и кризис в торговой компании закончился.
+# И теперь можно вернуться к обыденным делам.
+# Однако внезапно вы обнаружили, что старый скрипт,
+# который выводит данные о фруктах, куда-то потерялся. Необходимо его восстановить.
+#
+# Дан словарь с парами «название фрукта — цена»:
+#
+# incomes = {
+#     'apple': 5600.20,
+#     'orange': 3500.45,
+#     'banana': 5000.00,
+#     'bergamot': 3700.56,
+#     'durian': 5987.23,
+#     'peach': 10000.50,
+#     'pear': 1020.00,
+#     'persimmon': 310.00,
+# }
+#
+# Вывести на экран словарь в следующем виде:
+# apple -- 5600.2
+# orange -- 3500.45
+# banana -- 5000.0
+# bergamot -- 3700.56
+# durian -- 5987.23
+# peach -- 10000.5
+# pear -- 1020.0
+# persimmon -- 310.0
+#
+# Не используйте обращение по ключу словаря.
+
+incomes = {
+    'apple': 5600.20,
+    'orange': 3500.45,
+    'banana': 5000.00,
+    'bergamot': 3700.56,
+    'durian': 5987.23,
+    'peach': 10000.50,
+    'pear': 1020.00,
+    'persimmon': 310.00,
+}
+
+for item, price in incomes.items():
+    print('{fruit} -- {cost}'.format(
+        fruit=item,
+        cost=price
+    ))
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson5/task2.py:
+# Задача 2. Контакты 2
+#
+# Мы уже реализовывали телефонную книгу для Степана, однако её проблема была в том,
+# что туда нельзя было добавить людей с одинаковыми именами. Надо это исправить.
+#
+# Напишите программу, которая запрашивает у пользователя имя контакта,
+# фамилию и номер телефона, добавляет их в словарь и выводит на экран текущий словарь контактов.
+# Словарь состоит из пар «Ф. И. — телефон», где Ф. И. — это составной ключ.
+# Запрос на добавление идёт бесконечно (но можно задать своё условие для завершения программы).
+# Обеспечьте контроль ввода: если этот человек уже есть в словаре, то выведите соответствующее сообщение.
+
+
+phonebook = dict()
+while True:
+    query = input('\nВведите фамилию, имя и номер телефона: ').split()
+    name = tuple(query[:2])
+    number = int(query[-1])
+    if name in phonebook.keys():
+        print('Такой человек уже есть в словаре.')
+    else:
+        phonebook[name] = number
+
+    print('Текущая телефонная книга:')
+    for contact, number in phonebook.items():
+        print(f'{contact[0]} {contact[1]} - {number}')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson5/task1.py:
+# Задача 1. Паспортные данные
+#
+# В базе данных поликлиники хранятся паспортные данные людей.
+# Хранение реализовано с помощью словаря, состоящего из пар «Серия и номер паспорта — фамилия и имя».
+# Серия и номер — составной ключ, а фамилия и имя — составное значение.
+#
+# data = {
+#     (5000, 123456): ('Иванов', 'Василий'),
+#     (6000, 111111): ('Иванов', 'Петр'),
+#     (7000, 222222): ('Медведев', 'Алексей'),
+#     (8000, 333333): ('Алексеев', 'Георгий'),
+#     (9000, 444444): ('Георгиева', 'Мария')
+# }
+#
+# Реализуйте функцию, которая по номеру и серии паспорта выдаёт имя и фамилию человека.
+
+data = {
+    (5000, 123456): ('Иванов', 'Василий'),
+    (6000, 111111): ('Иванов', 'Петр'),
+    (7000, 222222): ('Медведев', 'Алексей'),
+    (8000, 333333): ('Алексеев', 'Георгий'),
+    (9000, 444444): ('Георгиева', 'Мария')
+}
+
+query = input('Введите номер и серию паспорта: ').split()
+for i in range(len(query)):
+    query[i] = int(query[i])
+query = tuple(query)
+for i in data:
+    if query == i:
+        print(*data[i])
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson2/task3.py:
+# Задача 3. Неправильный код
+#
+# Дан код, в котором должно происходить следующее:
+# изначально есть кортеж из пяти чисел.
+# Затем вызывается функция, которая получает на вход кортеж чисел,
+# генерирует случайный индекс и случайное значение,
+# а затем по этим индексу и значению меняет сам кортеж.
+# Функция должна возвращать кортеж и случайное значение.
+# В основном коде функция используется два раза,
+# и на экран два раза выводится новый кортеж и случайное значение.
+# Причём второй раз выводится сумма первого случайного значения и второго.
+#
+# Однако код, который вам дали, оказался нерабочим. Исправьте его в соответствии с описанием.
+
+import random
+
+
+def change(nums):
+    nums = list(nums)
+    index = random.randint(0, 5)
+    value = random.randint(100, 1000)
+    nums[index] = value
+    return tuple(nums), value
+
+
+my_nums = 1, 2, 3, 4, 5
+
+new_nums, rand_val = change(my_nums)
+
+print(new_nums, rand_val)
+new_nums, rand_val_2 = change(new_nums)
+rand_val += rand_val_2
+print(new_nums, rand_val)
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson2/task2.py:
+# Задача 2. Цилиндр
+#
+# Андрей однажды уже писал функции для расчёта площади сферы и объёма шара.
+# И теперь для своей курсовой работы ему пришлось связаться с цилиндрами.
+#
+# Пользователь вводит два значения: радиус и высоту.
+# Напишите функцию для расчёта площади боковой поверхности цилиндра и его полной площади.
+# Функция должна возвращать два эти значения.
+# После этого в основной программе выводятся оба ответа в две строки.
+
+import math
+
+
+def calculation(r, h):
+    side = 2 * math.pi * r * h
+    full = side + 2 * math.pi * r ** 2
+    return side, full
+
+
+R = float(input('Введите радиус: '))
+H = float(input('Введите высоту: '))
+side, full = calculation(R, H)
+print(f'Площадь боковой поверхности: {side}')
+print(f'Полная площадь цилиндра: {full}')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module20/lesson2/task1.py:
+# Задача 1. Создание кортежей
+#
+# Заполните один кортеж десятью случайными целыми числами от 0 до 5 включительно.
+# Также заполните второй кортеж числами от −5 до 0. Объедините два кортежа,
+# создав тем самым третий кортеж. С помощью метода кортежа определите в нём количество нулей.
+# Выведите на экран третий кортеж и количество нулей в нём.
+
+import random
+
+tuple_1 = tuple([random.randint(0, 5) for number in range(10)])
+tuple_2 = tuple([random.randint(-5, 0) for number in range(10)])
+tuple_3 = tuple_1 + tuple_2
+zeros = tuple_3.count(0)
+print(tuple_3)
+print(f'Количество нулей: {zeros}')
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson3/task3.py:
+# Задача 3. Разделители символов
+#
+# Человек хочет сделать рассылку поздравлений для определённого списка людей.
+# Поздравления для разных людей он хочет написать по-разному.
+#
+# Напишите программу, которая запрашивает у пользователя:
+#
+# Шаблон поздравления (туда вставляется ФИ и возраст)
+# ФИ людей (в одну строку, разделяются запятой)
+# Возраст каждого человека (в одну строку через пробел)
+# В конце  программа выводит поздравления и всех именинников в одну строку вместе с их возрастом.
+#
+# Пример:
+# Введите шаблон поздравления, в шаблоне можно использовать конструкцию {name} и {age}: С днём рождения, {name}! С {age}-летием тебя!
+# Список людей через запятую: Иван Иванов, Петя Петров, Лена Ленова
+# Возраст людей через пробел: 20 30 18
+#
+# С днём рождения, Иван Иванов! С 20-летием тебя!
+# С днём рождения, Петя Петров! С 30-летием тебя!
+# С днём рождения, Лена Ленова! С 18-летием тебя!
+#
+# Именинники: Иван Иванов 20, Петя Петров 30, Лена Ленова 18
+
+gratters = input('Введите шаблон поздравления, в шаблоне можно использовать конструкцию'
+                 '{name} и {age}: ')
+names_list = input('Список людей через запятую: ').split(', ')
+ages_str = input('Возраст людей через пробел: ')
+ages_list = [int(i_num) for i_num in ages_str.split()]
+
+for i_man in range(len(names_list)):
+    print(gratters.format(name=names_list[i_man], age=ages_list[i_man]))
+
+people = [
+    ' '.join([names_list[i_man], str(ages_list[i_man])])
+    for i_man in range(len(names_list))
+]
+people_str = ', '.join(people)
+print('Именниники:', people_str)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson3/task2.py:
+# Задача 2. Бабушка
+#
+# У одной бабушки, когда та переписывается с внуком, постоянно залипает кнопка пробела.
+# В итоге между словами получаются огромные расстояния.
+# Внук не знает как это поправить в самом телефоне, поэтому обратился к вам за помощью.
+#
+# Пользователь вводит строку. Напишите программу,
+# которая преобразовывает в этой строке все идущие подряд пробелы в один и выводит результат на экран.
+#
+# Пример:
+#
+# Введите текст: У       нас         пошёл                    снег    !
+# Исправленный текст: У нас пошёл снег !
+
+text = input('Введите текст: ').split()
+print(' '.join(text))
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson3/task1.py:
+# Задача 1. Улучшенная лингвистика 2
+#
+# Усовершенствуйте старую программу:
+#
+# У нас есть список из трёх слов, которые вводит пользователь.
+# Затем вводится сам текст произведения, который вводится уже в одну строку.
+# Напишите программу, которая посчитает, сколько раз слова пользователя встречаются в тексте.
+
+words = [input('Введите слово: ') for _ in range(3)]
+text = input('Введите текст: ').split()
+for i in range(3):
+    print(f'Слово {words[i]} повторяется {text.count(words[i])} раз')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson4/task3.py:
+# Задача 3. Удаление части
+#
+# На вход в программу подаётся строка, состоящая из прописных и заглавных букв кириллицы.
+# Напишите код, который проверяет, каких букв в строке больше, прописных или заглавных.
+# Если заглавных букв больше, то сделать все буквы строки заглавными, иначе сделать все прописными.
+#
+# Подсказка: используйте методы islower() и/или isupper().
+#
+# Пример:
+# Введите строку: ПитоН - этО хорошО
+# Результат: питон - это хорошо
+#
+# Пример 2:
+# Введите строку: ПиТоН - ЭтО УДоБнО
+# Результат: ПИТОН - ЭТО УДОБНО
+
+text = input('Введите строку: ')
+count = 0
+for i in text:
+    if i.islower():
+        count -= 1
+    elif i.isupper():
+        count += 1
+
+if count < 0:
+    print(text.lower())
+elif count > 0:
+    print(text.upper())
+else:
+    print(text)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson4/task2.py:
+# Задача 2. Путь к файлу
+#
+# Все данные сайта лежат в одном проекте.
+# При написании кода, внутри этого проекта часто используются абсолютные пути файлов, которые необходимо проверять.
+#
+# Пользователь вводит абсолютный путь к текстовому файлу, а также проверяемые данные: диск и расширение файла.
+# Напишите программу, которая проверяет корректность этого пути.
+#
+# Пример:
+#
+# Путь к файлу: C:/user/docs/folder/new_file.txt
+# На каком диске должен лежать файл: C
+# Требуемое расширение файла: .txt
+# Путь корректен!
+
+path = input('Путь к файлу: ')
+disk = input('На каком диске должен лежать файл: ')
+ext = input('Требуемое расширение файла: ')
+
+if not path.startswith(disk):
+    print('Ощибка! Неверный диск!')
+elif not path.endswith(ext):
+    print('Ошибка! Неверное расширение файла!')
+else:
+    print('Путь корректен!')
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson4/task1.py:
+# Задача 1. Шифр Цезаря 2
+#
+# Мы уже писали программу, которая шифрует строку с помощью шифра Цезаря.
+# Напомним, что в таком способе шифрования каждая буква заменяется на следующую по алфавиту через K позиций по кругу.
+#
+# Напишите (модифицируйте) программу, которая реализует этот алгоритм шифрования.
+# Не используйте конкатенацию и сделайте так, чтобы текст был в одном регистре.
+
+alphabet = list('абвгдеёжзийклмнопрстуфхцчшщъыьэюя')
+message = list(input('Введите сообщение: ').lower())
+shift = int(input('Введите сдвиг: '))
+
+encrypted_message = [alphabet[(alphabet.index(message[i]) + shift) % len(alphabet)]
+                     if message[i] in alphabet
+                     else message[i]
+                     for i in range(len(message))]
+
+print(*encrypted_message, sep='')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson2/task3.py:
+# Задача 3. IP-адрес
+#
+# IP-адрес компьютера состоит из 4 чисел, разделённых точкой.
+# Каждое число находится в диапазоне от 0 до 255 (включительно).
+#
+# Пример правильного адреса: 192.168.1.0
+# Пример неправильного адреса: 192.168.300.0
+#
+# Напишите программу, которая получает на вход 4 числа и выводит на экран IP-адрес.
+# Используйте переменную ip_address в качестве шаблона. Обеспечьте контроль ввода.
+
+# nums = [input('Введите число: ') for _ in range(4)]
+# for i in nums:
+#     print(i, end='.')
+
+nums = []
+count = 0
+while count < 4:
+    num = int(input('Введите число: '))
+    if num <= 255:
+        nums.append(num)
+        count += 1
+    else:
+        print('Неверное число!')
+
+ip_address = '{0}'
+
+for i in nums:
+    print(ip_address.format(i), end='.')
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson2/task2.py:
+# Задача 2. Долги
+#
+# Один наш друг занял у нас определённую сумму денег и всё никак не может их вернуть.
+# А деньги нам нужны. Поэтому мы решили написать небольшой скрипт-напоминалку,
+# который, возможно, разбудит его совесть.
+#
+# Напишите программу, которая получает на вход имя и долг,
+# а затем выводит на экран сообщение, где имя повторяется несколько раз (и долг, возможно, тоже).
+# Используйте числа в названиях ключей.
+#
+# Пример:
+#
+# Введите имя: Том
+# Введите долг: 100
+# Том! Том, привет! Как дела, Том? Где мои 100 рублей? Том!
+
+name = input('Введите имя: ')
+debt = int(input('Введите долг: '))
+
+result = '{0}! {0}, привет! Как дела, {0}? Где мои {1} рублей? {0}!'.format(
+    name,
+    debt
+)
+
+print(result)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module18/lesson2/task1.py:
+# Задача 1. Заказ
+#
+# После того, как человек сделал заказ в интернет-магазине,
+# ему на почту приходит оповещение с его именем и номером заказа.
+#
+# Напишите программу, которая получает на вход имя и код заказа,
+# а затем выводит на экран соответствующее сообщение.
+# Для решения используйте строковый метод format.
+#
+# Пример:
+#
+# Имя: Иван
+# Номер заказа: 10948
+#
+# Здравствуйте, Иван! Ваш номер заказа: 10948. Приятного дня!
+
+name = input('Имя: ')
+order_num = input('Номер заказа: ')
+result = 'Здравствуйте, {name}! Ваш номер заказа: {number}. Приятного дня!'.format(
+    name=name,
+    number=order_num
+)
+
+print(result)
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson3/task2.py:
+# Задача 2. Игроки
+#
+# Есть готовый словарь игроков, у каждого игрока есть имя, команда, в которой он играет, а также его текущий статус,
+# в котором указано, отдыхает он, тренируется или путешествует:
+#
+# players_dict = {
+#     1: {'name': 'Vanya', 'team': 'A', 'status': 'Rest'},
+#     2: {'name': 'Lena', 'team': 'B', 'status': 'Training'},
+#     3: {'name': 'Maxim', 'team': 'C', 'status': 'Travel'},
+#     4: {'name': 'Egor', 'team': 'C', 'status': 'Rest'},
+#     5: {'name': 'Andrei', 'team': 'A', 'status': 'Training'},
+#     6: {'name': 'Sasha', 'team': 'A', 'status': 'Rest'},
+#     7: {'name': 'Alina', 'team': 'B', 'status': 'Rest'},
+#     8: {'name': 'Masha', 'team': 'C', 'status': 'Travel'}
+# }
+#
+# Напишите программу, которая выводит на экран вот такие данные в разных строчках:
+# Все члены команды из команды А, которые отдыхают.
+# Все члены команды из группы B, которые тренируются.
+# Все члены команды из команды C, которые путешествуют.
+
+
+players_dict = {
+    1: {'name': 'Vanya', 'team': 'A', 'status': 'Rest'},
+    2: {'name': 'Lena', 'team': 'B', 'status': 'Training'},
+    3: {'name': 'Maxim', 'team': 'C', 'status': 'Travel'},
+    4: {'name': 'Egor', 'team': 'C', 'status': 'Rest'},
+    5: {'name': 'Andrei', 'team': 'A', 'status': 'Training'},
+    6: {'name': 'Sasha', 'team': 'A', 'status': 'Rest'},
+    7: {'name': 'Alina', 'team': 'B', 'status': 'Rest'},
+    8: {'name': 'Masha', 'team': 'C', 'status': 'Travel'}
+}
+
+print('Все члены команды из команды А, которые отдыхают.')
+team_a_members = [
+    print(player['name'])
+    for player in players_dict.values()
+    if player['team'] == 'A' and player['status'] == 'Rest'
+]
+
+print('\nВсе члены команды из команды B, которые тренируются.')
+team_b_members = [
+    print(player['name'])
+    for player in players_dict.values()
+    if player['team'] == 'B' and player['status'] == 'Training'
+]
+
+print('\nВсе члены команды из команды C, которые путешествуют.')
+team_c_members = [
+    print(player['name'])
+    for player in players_dict.values()
+    if player['team'] == 'C' and player['status'] == 'Travel'
+]
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson3/task1.py:
+# Задача 1. Член семьи
+#
+# Дана структура, которая содержит описание одного из членов семьи (имя, фамилия, хобби, сколько лет и дети):
+# family_member = {
+#     "name": "Jane",
+#     "surname": "Doe",
+#     "hobbies": ["running", "sky diving", "singing"],
+#     "age": 35,
+#     "children": [
+#         {
+#             "name": "Alice",
+#             "age": 6
+#         },
+#         {
+#             "name": "Bob",
+#             "age": 8
+#         }
+#     ]
+# }
+#
+# Напишите программу, которая реализует такую структуру: имя, фамилия, хобби, кол-во лет и дети.
+# Затем, с помощью метода get и установки значения по умолчанию, проверьте есть ли ребёнок с именем Bob.
+# Затем в отдельную переменную получите фамилию этого ребёнка и выведите её на экран. Если у него нет фамилии,
+# то получите значение ‘Nosurname’.
+
+family_member = dict()
+family_member['name'] = 'Jane'
+family_member['surname'] = 'Doe'
+family_member['hobbies'] = ['running', 'sky diving', 'singing']
+family_member['age'] = 35
+family_member['children'] = [
+    {
+        'name': 'Alice',
+        'age': 6
+    },
+    {
+        'name': 'Bob',
+        'age': 8
+    }
+]
+surname = ''
+for child in family_member.get('children', {}):
+    if child.get('name') == 'Bob':
+        print('Ребенок с именем Bob есть в списке')
+        if family_member.get('surname', {}):
+            surname = family_member.get('surname', {})
+        else:
+            surname = 'Nosurname'
+
+print('Фамилия ребенка:', surname)
+
+
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson4/task3.py:
+# Задача 3. Различные цифры
+#
+# Напишите программу, которая находит все различные цифры в символьной строке.
+# Для решения используйте множество (цифры будут различные, и поиск во множестве намного быстрее, чем в списке).
+#
+# Подсказка: можно использовать вот такое сравнение '0'<=x<='9'
+#
+# Пример:
+# Введите строку: ab1n32kz2
+# Различные цифры строки: 123
+
+test = set(input('Введите строку: '))
+numbers = set('123456789')
+test.intersection_update(numbers)
+print(f'Различные цифры строки: {test}')
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson4/task2.py:
+# Задача 2. Семинар
+#
+# На одном семинаре по теории множеств нужно показать наглядный пример,
+# как эти множества работают. Для начала было сгенерировано два набора чисел:
+#
+# nums_1 = [29, 17, 10, 15, 13, 22, 12, 22, 7, 24, 26, 3, 11, 2, 3, 16, 19, 21, 2, 3, 8, 27, 2, 17, 2, 20, 12, 21, 3, 1]
+# nums_2 = [16, 21, 30, 24, 5, 7, 23, 13, 11, 5, 21, 5, 19, 9, 12, 9, 15, 16, 29, 8, 16, 1, 22, 15, 16, 9, 1, 13, 21, 21]
+#
+# Вас попросили написать программу, которая будет наглядно демонстрировать работу со множествами с помощью этих чисел.
+# Напишите программу, которая преобразует списки во множества и убирает повторяющиеся элементы.
+# Затем удаляет минимальный элемент из каждого множества и добавляет туда случайное число в диапазоне от 100 до 200.
+# Затем выполните следующие действия со множествами:
+#
+# Вывести все элементы множеств (объединение).
+# Вывести только общие элементы (пересечение).
+# Вывести элементы, входящие в nums_2, но не входящие в nums_1.
+#
+# Пример результата:
+# 1-е множество: {1, 2, 3, 7, 8, 10, 11, 12, 13, 15, 16, 17, 19, 20, 21, 22, 24, 26, 27, 29}
+# 2-е множество: {1, 5, 7, 8, 9, 11, 12, 13, 15, 16, 19, 21, 22, 23, 24, 29, 30}
+#
+# Минимальный элемент 1-го множества: 1
+# Минимальный элемент 2-го множества: 1
+#
+# Случайное число для 1-го множества: 126
+# Случайное число для 2-го множества: 169
+#
+# Объединение множеств: {2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 19, 20, 21, 22, 23, 24, 26, 27, 29, 30, 169, 126}
+# Пересечение множеств: {7, 8, 11, 12, 13, 15, 16, 19, 21, 22, 24, 29}
+# Элементы, входящие в nums_2, но не входящие в nums_1: {5, 9, 169, 23, 30}
+
+import random
+
+nums_1 = [29, 17, 10, 15, 13, 22, 12, 22, 7, 24, 26, 3, 11, 2, 3, 16, 19, 21, 2, 3, 8, 27, 2, 17, 2, 20, 12, 21, 3, 1]
+nums_2 = [16, 21, 30, 24, 5, 7, 23, 13, 11, 5, 21, 5, 19, 9, 12, 9, 15, 16, 29, 8, 16, 1, 22, 15, 16, 9, 1, 13, 21, 21]
+
+nums_1_set, nums_2_set = set(nums_1), set(nums_2)
+
+print(f'1-е множество: {nums_1_set}')
+print(f'2-е множество: {nums_2_set}\n')
+
+print(f'Минимальный элемент 1-го множества: {min(nums_1_set)}')
+print(f'Минимальный элемент 2-го множества: {min(nums_2_set)}\n')
+
+nums_1_set.remove(min(nums_1_set))
+nums_2_set.remove(min(nums_2_set))
+
+random_1 = random.randint(100, 200)
+random_2 = random.randint(100, 200)
+nums_1_set.add(random_1)
+nums_2_set.add(random_2)
+
+print(f'Случайное число для 1-го множества: {random_1}')
+print(f'Случайное число для 2-го множества: {random_2}\n')
+
+set_union = nums_1_set.union(nums_2_set)
+print(f'Объединение множеств: {set_union}\n')
+
+set_intersection = nums_1_set.intersection(nums_2_set)
+print(f'Пересечение множеств: {set_intersection}')
+
+set_diff = nums_2_set.difference(nums_1_set)
+print(f'Элементы, входящие в nums_2, но не входящие в nums_1: {set_diff}')
+
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson4/task1.py:
+# Задача 1. Пунктуация
+#
+# Напишите программу, которая считает количество знаков пунктуации в символьной строке.
+# К знакам пунктуации относятся символы из набора ".,;:!?". Набор должен храниться в виде множества.
+#
+# Пример:
+# Введите строку: Я! Есть. Грут?! Я, Грут и Есть.
+# Количество знаков пунктуации: 6
+
+punctuation = set('.,;:!?')
+text = input('Введите строку: ')
+count = 0
+for symbol in text:
+    if symbol in punctuation:
+        count += 1
+print(count)
+
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson2/task3.py:
+# Задача 3. Гистограмма частоты
+#
+# Лингвистам нужно собрать данные о частоте букв в тексте, исходя из этих данных будет строиться гистограмма частоты букв.
+#
+# Напишите программу, которая получает сам текст и считает, сколько раз в строке встречается каждый символ.
+# На экран нужно вывести содержимое в виде таблицы, отсортированное по алфавиту, а также максимальное значение частоты.
+#
+# Пример:
+# Введите текст: Здесь что-то написано
+#   : 2
+# - : 1
+# З : 1
+# а : 2
+# д : 1
+# е : 1
+# и : 1
+# н : 2
+# о : 3
+# п : 1
+# с : 2
+# т : 2
+# ч : 1
+# ь : 1
+#
+# Максимальная частота: 3
+
+def histogram(line):
+    table = dict()
+    for symbol in line:
+        if symbol in table:
+            table[symbol] += 1
+        else:
+            table[symbol] = 1
+    return table
+
+
+text = input('Введите текст: ').lower()
+hist = histogram(text)
+
+for i_sym in sorted(hist.keys()):
+    print(f'{i_sym} - {hist[i_sym]}')
+
+print(f'Максимальная частота: {max(hist.values())}')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson2/task2.py:
+# Задача 2. Кризис фруктов
+#
+# Мы работаем в одной небольшой торговой компании,
+# где все данные о продажах фруктов за год сохранены в словаре в виде пар «название фрукта — доход»:
+#
+# incomes = {
+#     'apple': 5600.20,
+#     'orange': 3500.45,
+#     'banana': 5000.00,
+#     'bergamot': 3700.56,
+#     'durian': 5987.23,
+#     'grapefruit': 300.40,
+#     'peach': 10000.50,
+#     'pear': 1020.00,
+#     'persimmon': 310.00,
+# }
+#
+# В компании наступил небольшой кризис, и нам поручено провести небольшой анализ дохода.
+# Напишите программу, которая находит общий доход, затем выводит фрукт с минимальным доходом и удаляет его из словаря.
+# Выведите итоговый словарь на экран.
+#
+# Результат работы программы:
+#
+# Общий доход за год составил 35419.34 рублей
+# Самый маленький доход у grapefruit. Он составляет 300.4 рублей
+# Итоговый словарь: {
+# 'apple': 5600.2, 'orange': 3500.45, 'banana': 5000.0, 'bergamot': 3700.56, '
+# durian': 5987.23, 'peach': 10000.5, 'pear': 1020.0, 'persimmon': 310.0}
+
+incomes = {
+    'apple': 5600.20,
+    'orange': 3500.45,
+    'banana': 5000.00,
+    'bergamot': 3700.56,
+    'durian': 5987.23,
+    'grapefruit': 300.40,
+    'peach': 10000.50,
+    'pear': 1020.00,
+    'persimmon': 310.00,
+}
+
+total_incomes = sum(incomes.values())
+min_fruit = min(incomes, key=incomes.get)
+min_incomes = incomes[min_fruit]
+print('Общий доход за год составил:', total_incomes)
+print('Самый маленький доход у {}. Он составляет {} рублей'.format(min_fruit, min_incomes))
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson2/task1.py:
+# Задача 1. Склады
+#
+# У мебельного магазина есть два склада, на которых хранятся разные категории товаров по парам «название — количество»:
+#
+# small_storage = {
+#     'гвозди': 5000,
+#     'шурупы': 3040,
+#     'саморезы': 2000
+# }
+#
+# big_storage = {
+#     'доски': 1000,
+#     'балки': 150,
+#     'рейки': 600
+# }
+#
+# Магазин решил сократить аренду и скинуть все товары в большой склад (big_storage).
+# После этого нас попросили реализовать поиск по товарам.
+# Напишите программу, которая объединяет оба словаря в один (в big_storage),
+# затем запрашивает у пользователя название товара и выводит на экран его количество.
+# Если такого товара нет, то выводит об этом ошибку. Для получения значения используйте метод get.
+#
+small_storage = {
+    'гвозди': 5000,
+    'шурупы': 3040,
+    'саморезы': 2000
+}
+big_storage = {
+    'доски': 1000,
+    'балки': 150,
+    'рейки': 600
+}
+
+big_storage.update(small_storage)
+item = input('Введите название товара: ')
+
+if big_storage.get(item):
+    print(item, '-', big_storage[item])
+else:
+    print('Ошибка. Товар отсутствует.')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson1/task3.py:
+# Задача 3. Контакты
+#
+# Энтузиаст Степан, купив новый телефон, решил написать для него свою собственную операционную систему.
+# И, конечно же, первое, что он захотел в ней реализовать, — это телефонная книга.
+#
+# Напишите программу, которая запрашивает у пользователя имя контакта и номер телефона,
+# добавляет их в словарь и выводит на экран текущий словарь контактов.
+# Запрос на добавление идёт бесконечно (но можно задать своё условие для завершения программы).
+# Обеспечьте контроль ввода: если это имя уже есть в словаре, то выведите соответствующее сообщение.
+#
+# Пример:
+# Текущие контакты на телефоне:
+# <Пусто>
+#
+# Введите имя: Иван
+# Введите номер телефона: 100200300
+#
+# Текущие контакты на телефоне:
+# Иван  100200300
+# Введите имя: Лена
+# Введите номер телефона: 8005555522
+#
+# Текущие контакты на телефоне:
+# Иван  100200300
+# Лена  8005555522
+#
+# Введите имя: Иван
+# Ошибка: такое имя уже существует.
+
+contacts = dict()
+print("Текущие контакты на телефоне:\n"
+      "<Пусто>"
+      )
+while True:
+    name = input('\nВведите имя: ')
+    if name not in contacts:
+        number = int(input('Введите номер телефона: '))
+        contacts[name] = number
+        print('\nТекущие контакты на телефоне: ')
+        for i_name in contacts.keys():
+            print(i_name, contacts[i_name])
+    else:
+        print('Ошибка: такое имя уже существует.')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson1/task2.py:
+# Задача 2. Студент
+#
+# Пользователь вводит фамилию, имя студента, город проживания, вуз, в котором он учится,
+# и все его оценки. Всё вводится в одну строку через пробел.
+# Напишите программу, которая по этой информации составит словарь и выведет его на экран.
+#
+# Пример:
+#
+# Введите информацию о студенте через пробел (имя, фамилия, город, место учёбы, оценки): Илья Иванов Москва МГУ 5 4 4 4 5
+#
+# Результат:
+# Имя - Илья
+# Фамилия - Иванов
+# Город - Москва
+# Место учёбы - МГУ
+# Оценки - [5, 4, 4, 4, 5]
+
+student_str = input(
+    'Введите информацию о студенте через пробел\n'
+    '(фамилия, имя, город проживания, вуз, оценки): '
+)
+
+student_info = student_str.split()
+student = dict()
+student['Фамилия'] = student_info[0]
+student['Имя'] = student_info[1]
+student['Город проживания'] = student_info[2]
+student['Вуз'] = student_info[3]
+student['Оценки'] = []
+for i_grade in student_info[4:]:
+    student['Оценки'].append(i_grade)
+
+print('Результат: ')
+for i in student:
+    print(i, '-', student[i])
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module19/lesson1/task1.py:
+# Задача 1. Словарь квадратов чисел
+#
+# На вход программе поступает целое число num.
+# Напишите программу создания словаря, который включает в себя ключи от 1 до num,
+# а значениями соответствующего ключа будет значение ключа в квадрате.
+#
+# Пример:
+# Введите целое число: 5
+# Результат: {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+
+num = int(input('Введите целое число: '))
+result = dict()
+for i_num in range(1, num + 1):
+    result[i_num] = i_num ** 2
+print('Результат: {}'.format(result))
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson3/task2.py:
+# Задача 2. Непонятно!
+#
+# Друг никак не может понять эту тему с изменяемыми и неизменяемыми типами, ссылками, объектами и их id.
+# Видя, как он мучается, вы решили добить помочь ему и объяснить эту тему наглядно.
+#
+# Пользователь вводит любой объект. Напишите программу, которая выводит на экран тип введённых данных,
+# информацию о его изменяемости, а также id этого объекта.
+#
+# Пример 1:
+# Введите данные: привет
+# Тип данных: str (строка)
+# Неизменяемый (immutable)
+# Id объекта: 1705156583984
+#
+# Пример 2:
+# Введите данные: {‘a’: 10, ‘b’: 20}
+# Тип данных: dict (словарь)
+# Изменяемый (mutable)
+# Id объекта: 1705205308536
+
+import ast
+
+message = input('Введите данные: ')
+
+# if isinstance(message, str):
+#     print('Тип данных: str (строка)')
+#     print('Неизменяемый (immutable)')
+#     print(f'ID объекта: {id(message)}')
+
+# if ast.literal_eval(message) == int():
+#     print('Тип данных: int (целое число)')
+#     print('Неизменяемый (immutable)')
+#     print(f'ID объекта: {id(message)}')
+
+print(ast.literal_eval(message))
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson3/task1.py:
+# Задача 1. Ошибка
+#
+# В одном проекте на 10 000 строк кода произошла критическая ошибка.
+# Хорошо, что старший разработчик быстро её нашёл и исправил.
+# Он решил проверить, смогли бы вы её исправить, если бы его не было на месте.
+# Поэтому он написал для вас код с аналогичной ошибкой:
+#
+# import random
+#
+#
+# def change_dict(dct):
+#     num = random.randint(1, 100)
+#     for i_key, i_value in dct.items():
+#         if isinstance(i_value, list):
+#             i_value.append(num)
+#         if isinstance(i_value, dict):
+#             i_value[num] = i_key
+#         if isinstance(i_value, set):
+#             i_value.add(num)
+#
+#
+# nums_list = [1, 2, 3]
+# some_dict = {1: 'text', 2: 'another text'}
+# uniq_nums = {1, 2, 3}
+# common_dict = {1: nums_list, 2: some_dict, 3: uniq_nums, 4: (10, 20, 30)}
+# change_dict(common_dict)
+#
+# print(common_dict)
+#
+# Суть кода в том, что у вас есть общий словарь из нескольких ключей,
+# значения которых равны ранее объявленным переменным.
+# Затем вызывается функция, которая должна изменять значения словаря, добавляя к значениям случайное число,
+# в зависимости от типа данных. Но при этом меняются и ранее объявленные переменные.
+# Исправьте эту ошибку и убедитесь, что nums_list, some_dict и uniq_nums не меняются.
+
+import random
+
+
+def change_dict(dct):
+    num = random.randint(1, 100)
+    for i_key, i_value in dct.items():
+        if isinstance(i_value, list):
+            i_value.append(num)
+        if isinstance(i_value, dict):
+            i_value[num] = i_key
+        if isinstance(i_value, set):
+            i_value.add(num)
+
+
+nums_list = [1, 2, 3]
+some_dict = {1: 'text', 2: 'another text'}
+uniq_nums = {1, 2, 3}
+common_dict = {1: nums_list[:], 2: some_dict.copy(), 3: uniq_nums.copy(), 4: (10, 20, 30)}
+change_dict(common_dict)
+
+print(nums_list)
+print(some_dict)
+print(uniq_nums)
+print(common_dict)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson4/task3.py:
+# Задача 3. Помощь другу
+#
+# Нашего друга попросили написать функцию, которая на вход принимает список всякого мусора.
+# Ему нужно подготовить из этого списка список словарей, чтобы его коллеги смогли дальше продолжить обработку данных.
+# Вот список правил, что нужно сделать с изначальным списком:
+#
+# Если в списке встретился словарь, то оставляем его.
+# Если в списке встретилась строка, то из неё нужно сделать словарь и положить его в итоговый список,
+# например  “abc” → {“abc”: “abc”}.
+# С числами нужно сделать то же самое, что и со строками.
+# Всё остальное выкидываем из нашего списка.
+#
+# Друг написал программу, но в ней ошибка, так как она что-то не то выводит :( Нужна ваша помощь, вот сама программа:
+#
+# def create_dict(data, template=dict()):
+#     if isinstance(data, dict):
+#         return data
+#     if isinstance(data, int) or isinstance(data, float) or isinstance(data, str):
+#         return template[data] = data
+#
+# def data_preparation(old_list):
+#     new_list = []
+#     for i_element in old_list:
+#         new_list.append(create_dict(i_element))
+#     return new_list
+#
+#
+# data = [“sad”, {“sds”: 23}, {43}, [12, 42, 1], 2323]
+# data = data_preparation(data)
+# print(data)
+#
+# Исправьте программу и убедитесь, что всё работает верно.
+
+
+def create_dict(data, template=None):
+    if template is None:
+        template = dict()
+    if isinstance(data, dict):
+        return data
+    if isinstance(data, int) or isinstance(data, float) or isinstance(data, str):
+        template[data] = data
+        return template
+
+
+def data_preparation(old_list):
+    new_list = []
+    for i_element in old_list:
+        if create_dict(i_element):
+            new_list.append(create_dict(i_element))
+    return new_list
+
+
+data = ['sad', {'sds': 23}, {43}, [12, 42, 1], 2323]
+data = data_preparation(data)
+print(data)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson4/task2.py:
+# Задача 2. Накопление значений
+#
+# При работе со значениями по умолчанию и изменяемыми типами данных нужно знать
+# и остерегаться ещё одной интересной штуки.
+#
+# Напишите функцию с двумя аргументами: первый — число num, позиционный аргумент;
+# второй — список lst, по умолчанию он пустой.
+# В теле функции в список добавляется число num и сам список выводится на экран.
+#
+# В основной программе вызовите функции три раза только с одним аргументом (числом), например так:
+#
+# add_num(5)
+# add_num(10)
+# add_num(15)
+#
+# И посмотрите, что произойдёт.
+#
+# После этого сделайте значение lst по умолчанию None и поправьте функцию, чтобы она работала правильно.
+
+def add_num(num, lst=None):
+    if lst is None:
+        lst = []
+    lst.append(num)
+    print(lst)
+
+
+add_num(5)
+add_num(10)
+add_num(15)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson4/task1.py:
+# Задача 1. Работа с файлом
+#
+# Вы пишете небольшое приложение для работы с файлами.
+# Реализуйте функцию, которая может принимать на вход три аргумента:
+# вопрос пользователю (на который нужно ответить да или нет), сообщение о неправильном вводе и количество попыток.
+# Вопрос — обязательный позиционный аргумент, остальные — со значениями по умолчанию.
+# При корректном ответе функция может возвращать что угодно — например, число 1 при ответе «да» или 0 при ответе «нет».
+#
+# В основной программе вызовите функцию минимум три раза:
+# только с вопросом, с вопросом и сообщением об ошибке, с вопросом и количеством попыток.
+#
+# Пример работы программы:
+# Вы действительно хотите выйти? что
+# Неверный ввод. Пожалуйста, введите 'да' или 'нет'.
+# Осталось попыток: 3
+# Вы действительно хотите выйти? да
+# Удалить файл? не знаю
+# Так удалить или нет?
+# Осталось попыток: 3
+# Удалить файл? нет
+# Записать файл? ага
+# Неверный ввод. Пожалуйста, введите 'да' или 'нет'.
+# Осталось попыток: 1
+# Записать файл? да
+
+def ask_user(question,
+             error="Неверный ввод. Пожалуйста ответьте 'да' или 'нет'",
+             retries=4):
+    while True:
+        answer = input(question).lower()
+        if answer == 'да':
+            return 1
+        elif answer == 'нет':
+            return 0
+        retries -= 1
+        if retries == 0:
+            print('Количество попыток истекло')
+            break
+        print(error)
+        print('Осталось попыток:', retries)
+
+
+ask_user('Вы действительно хотите выйти?')
+ask_user('Удалить файл?', 'Так удалить или нет?')
+ask_user('Записать файл?', retries=2)
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson2/task3.py:
+# Задача 3. Поиск элемента
+#
+# Когда мы работаем с большой многоуровневой структурой,
+# нам нередко необходимо пройтись по ней и найти нужный элемент.
+# Для этого в программировании используются специальные алгоритмы поиска.
+#
+# Напишите функцию, которая находит заданный пользователем ключ в словаре и выдаёт значение этого ключа на экран.
+# В качестве примера можно использовать такой словарь:
+#
+# site = {
+#     'html': {
+#         'head': {
+#             'title': 'Мой сайт'
+#         },
+#         'body': {
+#             'h2': 'Здесь будет мой заголовок',
+#             'div': 'Тут, наверное, какой-то блок',
+#             'p': 'А вот здесь новый абзац'
+#         }
+#     }
+# }
+#
+# Пример 1:
+# Искомый ключ: h2
+# Значение: Здесь будет мой заголовок
+#
+# Пример 2:
+# Искомый ключ: abc
+# Такого ключа в структуре сайта нет.
+
+site = {
+    'html': {
+        'head': {
+            'title': 'Мой сайт'
+        },
+        'body': {
+            'h2': 'Здесь будет мой заголовок',
+            'div': 'Тут, наверное, какой-то блок',
+            'p': 'А вот здесь новый абзац'
+        }
+    }
+}
+
+
+def finder(data, key):
+    if key in data:
+        return data[key]
+
+    for value in data.values():
+        if isinstance(value, dict):
+            result = finder(value, key)
+            if result:
+                break
+    else:
+        result = None
+    return result
+
+
+user_key = input('Искомый ключ: ')
+if finder(site, user_key):
+    print('Значение:', finder(site, user_key))
+else:
+    print('Такого ключа нет')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson2/task2.py:
+# Задача 2. Степень числа
+#
+# На одном из форумов, посвящённых программированию,
+# пользователь выложил такой код для расчёта степени числа без использования циклов, ** и функции math.pow():
+#
+# def power(a, n):
+#     return a * power(a, n)
+#
+#
+# float_num = float(input('Введите вещественное число: '))
+# int_num = int(input('Введите степень числа: '))
+# print(float_num, '**', int_num, '=', power(float_num, int_num))
+#
+# Другие пользователи отметили, что это решение нерабочее и в нём есть ошибки. Исправьте это решение,
+# не используя циклы, возведение в степень через ** и функцию math.pow()
+#
+# Правильный результат:
+# Введите вещественное число: 1.5
+# Введите степень числа: 5
+#
+# 1.5 ** 5 = 7.59375
+
+
+def power(a, n):
+    if n == 1:
+        return a
+    return a * power(a, n - 1)
+
+
+float_num = float(input('Введите вещественное число: '))
+int_num = int(input('Введите степень числа: '))
+print(float_num, '**', int_num, '=', power(float_num, int_num))
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module21/lesson2/task1.py:
+# Задача 1. Challenge
+#
+# Обычно программисты любят, когда всё просто и понятно.
+# Но Антон не из таких. Он любит устраивать себе челлендж, развиваться и сразу применять на практике то,
+# что только что узнал. И в этот раз он подумал реализовать подсчёт факториала без использования циклов.
+#
+# Напишите функцию, которая считает факториал числа с помощью рекурсии.
+#
+# Кстати, в Python есть ограничение на количество рекурсивных вызовов.
+# Попробуйте передать своей функции, например, число 1000 и посмотрите, что будет.
+
+def factorial(num):
+    if num == 1:
+        return 1
+    num_minus_1 = num - 1
+    return num * factorial(num_minus_1)
+
+
+print(factorial(5))
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson3/task3.py:
+# Задача 3. Отряды
+#
+# Мы продолжаем пробовать себя в качестве разработчика игр.
+# Теперь нужно написать небольшую логику поведения некоторых отрядов,
+# а также их урон. Есть два отряда, в каждом по 10 монстров.
+# В первом отряде у каждого монстра урон абсолютно случайный и колеблется от 50 до 80,
+# а во втором — от 30 до 60. Оба отряда вместе напали на третий, также из 10 юнитов.
+# Юнит третьего отряда погибает, если сумма урона от двух монстров больше 100.
+#
+# Напишите программу, которая генерирует случайные значения
+# в первых двух списках в заданных диапазонах,
+# а также генерирует список, состоящий из фраз «Погиб» или «Выжил».
+# Выведите все списки на экран.
+#
+# Пример:
+#
+# Урон первого отряда: [77, 75, 76, 77, 76, 73, 57, 67, 76, 52]
+# Урон второго отряда: [53, 51, 31, 60, 49, 37, 31, 60, 37, 47]
+# Состояние третьего отряда: ['Погиб', 'Погиб', 'Погиб', 'Погиб',
+#                             'Погиб', 'Погиб', 'Выжил', 'Погиб', 'Погиб', 'Выжил']
+
+import random
+
+first_squad = [random.randint(50, 80) for _ in range(10)]
+second_squad = [random.randint(30, 60) for _ in range(10)]
+third_squad_condition = [('Погиб' if first_squad[i_damage] + second_squad[i_damage] > 100
+                          else 'Выжил')
+                         for i_damage in range(10)]
+
+print(f'Урон первого отряда: {first_squad}')
+print(f'Урон второго отряда: {second_squad}')
+print(f'Состояние третьего отряда: {third_squad_condition}')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson3/task2.py:
+# Задача 2. Магазин
+#
+# У нас есть вот такой список цен на некоторые товары из магазина:
+#
+# original_prices = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
+#
+# В этом списке также хранятся цены на товары, которые уже давно не продаются.
+# По какой-то причине система, вместо того чтобы их занулить, просто приписала к ним минус.
+# Нам нужно это исправить.
+# Напишите программу, которая генерирует новый список из первого списка,
+# заменяя все отрицательные числа на ноль.
+#
+# Результат:
+
+# [1.25, 0, 10.22, 3.78, 0, 1.16]
+
+original_prices = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
+new_prices = [(0 if i < 0 else i) for i in original_prices]
+print(new_prices)
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson3/task1.py:
+# Задача 1. Список чётных чисел
+#
+# Пользователь вводит два числа: А и В.
+# Реализуйте код, который генерирует список из чётных чисел в диапазоне от А до B.
+# Используйте list comprehensions (как и в следующих задачах).
+
+A = int(input('Введите левую границу: '))
+B = int(input('Введите правую границу: '))
+numbers = [i for i in range(A, B + 1) if i % 2 == 0]
+print(numbers)
+
+
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson4/task3.py:
+# Задача 3. Удаление части
+#
+# Дан список из N чисел, а также числа А и В
+# (можно сгенерировать случайно, при этом А < B).
+# Напишите программу, которая удаляет элементы списка с индексами от А до В.
+# Не используйте дополнительные переменные и методы списков.
+
+N = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+A = 2
+B = 5
+N[A:B + 1] = ''
+print(N)
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson4/task2.py:
+# Задача 2. Срезы
+#
+# Дан список чисел:
+#
+# nums = [48, -10, 9, 38, 17, 50, -5, 43, 46, 12]
+#
+# Напишите программу, которая выводит на экран шесть ответов:
+#
+# 1. В первой строке выведите первые пять элементов списка.
+# 2. Во второй строке выведите весь список, кроме последних двух элементов.
+# 3. В третьей строке выведите все элементы с чётными индексами.
+# 4. В четвёртой строке выведите все элементы с нечётными индексами.
+# 5. В пятой строке выведите все элементы в обратном порядке.
+# 6. В шестой строке выведите все элементы списка через один в обратном порядке, начиная с последнего.
+# Для решения используйте только срезы (и без функции len).
+#
+# Результат:
+#
+# [48, -10, 9, 38, 17]
+# [48, -10, 9, 38, 17, 50, -5, 43]
+# [48, 9, 17, -5, 46]
+# [-10, 38, 50, 43, 12]
+# [12, 46, 43, -5, 50, 17, 38, 9, -10, 48]
+# [12, 43, 50, 38, -10]
+
+nums = [48, -10, 9, 38, 17, 50, -5, 43, 46, 12]
+print(nums[:5])
+print(nums[:-2])
+print(nums[::2])
+print(nums[1::2])
+print(nums[::-1])
+print(nums[::-2])
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson4/task1.py:
+# Задача 1. Анализ цен
+#
+# Нашему другу заказали написать программу,
+# которая анализирует цены на бирже.
+# Она получает этот пакет данных, но делать что-либо с ним нельзя.
+# Для нормальной работы аналитической программы берётся новый список,
+# который равен тому, что пришло. Затем идёт работа с новым списком:
+# если есть отрицательные цены, то программа их зануляет и в конце выводит на экран,
+# сколько денег мы по итогу потеряли. Получился вот такой код:
+#
+# original_prices = [-12, 3, 5, -2, 1]
+# new_prices = original_prices
+# for i in range(len(original_prices)):
+#     if new_prices[i] < 0:
+#         new_prices[i] = 0
+#
+# print("Мы потеряли: ",  sum(original_prices) - sum(new_prices))
+#
+# Однако при таких входных данных программа почему-то работает неправильно:
+# она выводит ответ 0, когда правильный ответ 14.
+# Помогите другу исправить программу, а также сделайте так,
+# чтобы список цен генерировался случайно (диапазон можно выбрать любой).
+
+import random
+A = int(input('Введите левую границу: '))
+B = int(input('Введите правую границу: '))
+original_prices = [random.randint(A, B) for _ in range(5)]
+new_prices = [(i if i > 0 else 0) for i in original_prices]
+print(f'Мы потеряли: {abs(sum(original_prices) - sum(new_prices))}')
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson2/task3.py:
+# Задача 3. Повышение цен
+#
+# Дан список цен на пять товаров с точностью до копейки.
+# Так как экономика даёт о себе знать, мы спрогнозировали,
+# что через год придётся повышать цены на X процентов,
+# а ещё через один год — ещё на Y процентов.
+#
+# Напишите программу, которая получает на вход список цен на товары
+# (вещественные числа, список генерируется также с помощью list comprehensions)
+# и выводит в одну строку общую сумму стоимости товаров за каждый год.
+#
+# Пример:
+# Цена на товар: 1.09
+# Цена на товар: 23.56
+# Цена на товар: 57.84
+# Цена на товар: 4.56
+# Цена на товар: 6.78
+#
+# Повышение на первый год: 0
+# Повышение на второй год: 10
+# Сумма цен за каждый год: 93.83 93.83 103.22
+
+def new_prices(price, percent):
+    return round(price * (1 + percent / 100), 2)
+
+
+curr_prices = [float(input('Цена за товар: ')) for i_price in range(5)]
+print()
+first_percent = int(input('Повышение на первый год: '))
+second_percent = int(input('Повышение на второй год: '))
+
+first_rise = [new_prices(i_price, first_percent) for i_price in curr_prices]
+second_rise = [new_prices(i_price, second_percent) for i_price in first_rise]
+
+print(f'Сумма цен за каждый год: {round(sum(curr_prices), 2)}, {round(sum(first_rise), 2)}, {round(sum(second_rise), 2)}')
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson2/task2.py:
+# Задача 2. Сообщение
+#
+# Илья решил безобидно подшутить над другом и написал программу для смартфона,
+# которая при отправке сообщения удваивает каждый символ строки
+# и заодно к каждому удвоенному добавляет ещё один дополнительный.
+#
+# Пользователь вводит строку и дополнительный символ.
+# Напишите программу, которая генерирует два списка:
+# в первом списке каждый элемент — удвоенная буква первой строки,
+# во втором списке каждый элемент — конкатенация элемента первого списка
+# и дополнительного символа.
+#
+# Пример:
+# Введите строку: привет
+# Введите дополнительный символ: !
+#
+# Список удвоенных символов: ['пп', 'рр', 'ии', 'вв', 'ее', 'тт']
+# Склейка с дополнительным символом: ['пп!', 'рр!', 'ии!', 'вв!', 'ее!', 'тт!']
+
+text = input('Введите строку: ')
+sym = input('Введите дополнительный символ: ')
+
+double = [i_sym * 2 for i_sym in text]
+sym_add = [j_sym + sym for j_sym in double]
+
+print()
+print('Список удвоенных символов:', double)
+print('Склейка с дополнительным символом:', sym_add)
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/Module17/lesson2/task1.py:
+# Задача 1. Кубы и квадраты
+
+# Пользователь вводит числа A и B.
+# Напишите программу, которая генерирует два списка:
+# в первом лежат кубы чисел в диапазоне от А до В,
+# во втором — квадраты чисел в этом же диапазоне.
+# Выведите списки на экран.
+# Для генерации используйте list comprehensions (как и в следующих задачах).
+#
+# Пример:
+# Левая граница: 5
+# Правая граница: 10
+#
+# Список кубов чисел в диапазоне от 5 до 10: [125, 216, 343, 512, 729, 1000]
+# Список квадратов чисел в диапазоне от 5 до 10: [25, 36, 49, 64, 81, 100]
+
+A = int(input('Левая граница: '))
+B = int(input('Правая граница: '))
+print()
+cubes = [i_cubes ** 3 for i_cubes in range(A, B + 1)]
+squares = [i_squares ** 2 for i_squares in range(A, B + 1)]
+print(f'Список кубов чисел в диапазоне от {A} до {B}: {cubes}')
+print(f'Список квадратов чисел в диапазоне от {A} до {B}: {squares}')
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/SkillBox_lessons.iml:
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/inspectionProfiles/profiles_settings.xml:
+<component name="InspectionProjectProfileManager">
+  <settings>
+    <option name="USE_PROJECT_PROFILE" value="false" />
+    <version value="1.0" />
+  </settings>
+</component>
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/codeStyles/codeStyleConfig.xml:
+<component name="ProjectCodeStyleConfiguration">
+  <state>
+    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Default" />
+  </state>
+</component>
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/.gitignore:
+# Default ignored files
+/shelf/
+/workspace.xml
+
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/workspace.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8b5fca6a-ea64-4c1b-8ef7-4b1d4c62057e" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="25qIfqZ0kDfpHivnldrczFZHIey" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Python" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Module16" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.task2 (2)">
+    <configuration name="task1 (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SkillBox_lessons" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Module22/lesson3" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Module22/lesson3/task1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="task1 (2)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SkillBox_lessons" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Module22/lesson4" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Module22/lesson4/task1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="task2 (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SkillBox_lessons" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Module22/lesson3" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Module22/lesson3/task2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="task2 (2)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SkillBox_lessons" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Module22/lesson4" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Module22/lesson4/task2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="task2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SkillBox_lessons" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Module22/lesson2" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Module22/lesson2/task2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.task2 (2)" />
+        <item itemvalue="Python.task1 (2)" />
+        <item itemvalue="Python.task2 (1)" />
+        <item itemvalue="Python.task1 (1)" />
+        <item itemvalue="Python.task2" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8b5fca6a-ea64-4c1b-8ef7-4b1d4c62057e" name="Changes" comment="" />
+      <created>1646248296490</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1646248296490</updated>
+    </task>
+    <servers />
+  </component>
+</project>
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/modules.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/SkillBox_lessons.iml" filepath="$PROJECT_DIR$/.idea/SkillBox_lessons.iml" />
+    </modules>
+  </component>
+</project>
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/dictionaries/artuhovse.xml:
+<component name="ProjectDictionaryState">
+  <dictionary name="artuhovse" />
+</component>
+****************************************
+Содержимое файла /Users/artuhovse/PycharmProjects/SkillBox_lessons/.idea/misc.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10" project-jdk-type="Python SDK" />
+</project>
+****************************************
