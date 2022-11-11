@@ -23,21 +23,21 @@
 # Для проверки результата создайте необходимые папки (task, Additional_info, Dont touch me)
 # на своём диске в соответствии с картинкой и также добавьте файлы group_1.txt и group_2.txt.
 
-file = open('/Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/group_1.txt',
+file = open('/Python_Basic/Module22/lesson3/task/group_1.txt',
             'r', encoding='utf-8')
 summa = 0
 for i_line in file:
     info = i_line.split()
     summa += int(info[2])
 
-file = open('/Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/group_1.txt',
+file = open('/Python_Basic/Module22/lesson3/task/group_1.txt',
             'r', encoding='utf-8')
 diff = 0
 for i_line in file:
     info = i_line.split()
     diff -= int(info[2])
 
-file_2 = open('/Users/artuhovse/PycharmProjects/SkillBox_lessons/Module22/lesson3/task/Additional_info/group_2.txt',
+file_2 = open('/Python_Basic/Module22/lesson3/task/Additional_info/group_2.txt',
               'r', encoding='utf-8')
 compose = 1
 for i_line in file_2:
