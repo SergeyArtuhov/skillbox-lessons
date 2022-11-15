@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
+from .models import Advertisement
+from random import sample
+
 
 
 def advertisement_list(request, *args, **kwargs):
@@ -8,7 +11,9 @@ def advertisement_list(request, *args, **kwargs):
 
 
 def advertisement_detail(request, *args, **kwargs):
-    return HttpResponse('Тут какие-то детали')
+    advertisements = Advertisement.objects.all()
+    advertisements = sample(advertisements, 1)
+    return render(request, 'advertisement/detail.html', {'advertisements': advertisements})
 
 
 def advertisement_contacts(request, *args, **kwargs):
