@@ -19,4 +19,8 @@
   {% else %}
     <div>No products</div>
   {% endif %}
+  
+  <div>
+    <a href="{% url 'shopapp:product_create' %}">Create new product</a>
+  </div>
 {% endblock %}
