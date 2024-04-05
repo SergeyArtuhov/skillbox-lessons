@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.contrib.auth.models import Group
 from timeit import default_timer
 from .models import Product, Order
-from .forms import GroupForm, ProductForm
+from .forms import GroupForm
 from django.views import View
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 
 class ShopIndexView(View):
@@ -57,44 +59,106 @@ class GroupsListView(View):
 #     return render(request, 'shopapp/groups-list.html', context=context)
 
 
-class ProductDetailView(View):
-    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
-        # product = Product.objects.get(pk=pk)  # так можно, но при вводе несуществующего продукта будет ошибка сервера
-        product = get_object_or_404(Product, pk=pk)  # или вывод продукта из БД или ошибка 404
-        context = {
-            "product": product
-        }
-        return render(request, "shopapp/products-detail.html", context=context)
+class ProductDetailView(DetailView):
+    template_name = 'shopapp/products-detail.html'
+    # model = Product
+    queryset = Product.objects.filter(archived=False)  #  чтобы архивные продукты не отображались
+    context_object_name = "product"
 
 
-def products_list(request: HttpRequest):
-    context = {
-        'products_list': Product.objects.all()
-    }
-    return render(request, 'shopapp/products_list.html', context=context)
+# class ProductDetailView(View):
+#     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+#         # product = Product.objects.get(pk=pk)  # так можно, но при вводе несуществующего продукта будет ошибка сервера
+#         product = get_object_or_404(Product, pk=pk)  # или вывод продукта из БД или ошибка 404
+#         context = {
+#             "product": product
+#         }
+#         return render(request, "shopapp/products-detail.html", context=context)
 
 
-def product_create(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":  # проверяем какой метод
-        form = ProductForm(request.POST)  # получаем заполненную форму
-        if form.is_valid():  # проверяем валидность формы
-            # name = form.cleaned_data['name'] Clean_data это словарь
-            # price = form.cleaned_data['price']
-            # Product.objects.create(name, price) Можно и так передавать, но это долго
-            # Product.objects.create(**form.cleaned_data)  # распаковываем словарь и передаем в базу данных всю форму
-            form.save()
-            url = reverse('shopapp:products_list')  # генерируем ссылку для перехода
-            return redirect(url)  # открываем ссылку
-    else:  # это если будет Гет запрос
-        form = ProductForm()
-    context = {
-        "form": form
-    }
-    return render(request, 'shopapp/create-product.html', context=context)
+class ProductsListView(ListView):
+    template_name = 'shopapp/products_list.html'
+    # model = Product
+    queryset = Product.objects.filter(archived=False)  #  чтобы архивные продукты не отображались
+    context_object_name = "products_list"  # указываем по какой переменной будут передаваться модель в шаблон
 
 
-def orders_list(request: HttpRequest):
-    context = {
-        'orders': Order.objects.select_related('user').prefetch_related('products').all(),
-    }  # это значит что необходимо загрузить все объекты Order вместе с пользователями и к ним еще будут присоеденины продукты
-    return render(request, 'shopapp/orders-list.html', context=context)
+# class ProductsListView(TemplateView):
+#     template_name = 'shopapp/products_list.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['products_list'] = Product.objects.all()
+#         return context
+
+
+# def products_list(request: HttpRequest):
+#     context = {
+#         'products_list': Product.objects.all()
+#     }
+#     return render(request, 'shopapp/products_list.html', context=context)
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    fields = "name", "price", "description", "discount"  # или указываем поля, или указываем форму ниже
+    # form_class = ProductForm
+    success_url = reverse_lazy("shopapp:products_list")  # ссылки можно генерировать только в View функции поэтому так
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = "name", "price", "description", "discount"
+    template_name_suffix = "_update_form"
+
+    def get_success_url(self):  # генерируем ссылку для возврата к деталям товара
+        return reverse(
+            "shopapp:product_details",  # ссылка куда переадресовываем
+            kwargs={"pk": self.object.pk}  # ссылка на pk обьекта который мы обновили
+        )
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy("shopapp:products_list")
+
+    def form_valid(self, form):  #  функция выполняется если форма валидна
+        success_url = self.get_success_url()
+        self.object.archived = True
+        self.object.save()
+        return HttpResponseRedirect(success_url)
+
+
+
+# def product_create(request: HttpRequest) -> HttpResponse:
+#     if request.method == "POST":  # проверяем какой метод
+#         form = ProductForm(request.POST)  # получаем заполненную форму
+#         if form.is_valid():  # проверяем валидность формы
+#             # name = form.cleaned_data['name'] Clean_data это словарь
+#             # price = form.cleaned_data['price']
+#             # Product.objects.create(name, price) Можно и так передавать, но это долго
+#             # Product.objects.create(**form.cleaned_data)  # распаковываем словарь и передаем в базу данных всю форму
+#             form.save()
+#             url = reverse('shopapp:products_list')  # генерируем ссылку для перехода
+#             return redirect(url)  # открываем ссылку
+#     else:  # это если будет Гет запрос
+#         form = ProductForm()
+#     context = {
+#         "form": form
+#     }
+#     return render(request, 'shopapp/create-product.html', context=context)
+
+
+# def orders_list(request: HttpRequest):
+#     context = {
+#         'orders': Order.objects.select_related('user').prefetch_related('products').all(),
+#     }  # это значит что необходимо загрузить все объекты Order вместе с пользователями и к ним еще будут присоеденины продукты
+#     return render(request, 'shopapp/orders-list.html', context=context)
+
+
+class OrderListView(ListView):
+    queryset = Order.objects.select_related('user').prefetch_related('products')  # без all()
+
+
+class OrderDetailView(DetailView):
+    queryset = (Order.objects.select_related('user').prefetch_related('products'))

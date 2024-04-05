@@ -17,10 +17,10 @@ from django.contrib.auth.models import Group
 #         )]
 #     )
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = "name", "price", "description", "discount"
+# class ProductForm(forms.ModelForm):
+#     class Meta:
+#         model = Product
+#         fields = "name", "price", "description", "discount"
 
 
 class GroupForm(forms.ModelForm):
