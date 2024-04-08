@@ -7,6 +7,7 @@ from .forms import GroupForm
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 
 
 class ShopIndexView(View):
@@ -62,7 +63,7 @@ class GroupsListView(View):
 class ProductDetailView(DetailView):
     template_name = 'shopapp/products-detail.html'
     # model = Product
-    queryset = Product.objects.filter(archived=False)  #  чтобы архивные продукты не отображались
+    queryset = Product.objects.filter(archived=False)  # чтобы архивные продукты не отображались
     context_object_name = "product"
 
 
@@ -79,7 +80,7 @@ class ProductDetailView(DetailView):
 class ProductsListView(ListView):
     template_name = 'shopapp/products_list.html'
     # model = Product
-    queryset = Product.objects.filter(archived=False)  #  чтобы архивные продукты не отображались
+    queryset = Product.objects.filter(archived=False)  # чтобы архивные продукты не отображались
     context_object_name = "products_list"  # указываем по какой переменной будут передаваться модель в шаблон
 
 
@@ -99,7 +100,11 @@ class ProductsListView(ListView):
 #     return render(request, 'shopapp/products_list.html', context=context)
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(UserPassesTestMixin, CreateView):
+    def test_func(self):
+        # return self.request.user.groups.filter(name="secret-group").exists()  #  существует ли такое условие
+        return self.request.user.is_superuser  # если пользователь СУПЕР то доступ разрешен
+
     model = Product
     fields = "name", "price", "description", "discount"  # или указываем поля, или указываем форму ниже
     # form_class = ProductForm
@@ -122,12 +127,11 @@ class ProductDeleteView(DeleteView):
     model = Product
     success_url = reverse_lazy("shopapp:products_list")
 
-    def form_valid(self, form):  #  функция выполняется если форма валидна
+    def form_valid(self, form):  # функция выполняется если форма валидна
         success_url = self.get_success_url()
         self.object.archived = True
         self.object.save()
         return HttpResponseRedirect(success_url)
-
 
 
 # def product_create(request: HttpRequest) -> HttpResponse:
@@ -156,9 +160,10 @@ class ProductDeleteView(DeleteView):
 #     return render(request, 'shopapp/orders-list.html', context=context)
 
 
-class OrderListView(ListView):
+class OrderListView(LoginRequiredMixin, ListView):
     queryset = Order.objects.select_related('user').prefetch_related('products')  # без all()
 
 
-class OrderDetailView(DetailView):
+class OrderDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = "shopapp.view_order"
     queryset = (Order.objects.select_related('user').prefetch_related('products'))
