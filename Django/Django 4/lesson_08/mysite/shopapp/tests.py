@@ -1,3 +1,9 @@
 from django.test import TestCase
+from .utils import two_numbers
 
-# Create your tests here.
+
+class TwoNumbersTestCase(TestCase):
+    def test_two_numbers(self):
+        result = two_numbers(2, 3)
+        self.assertEqual(result, 5)
+
