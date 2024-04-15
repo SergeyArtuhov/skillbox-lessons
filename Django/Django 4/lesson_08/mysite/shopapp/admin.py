@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.db.models import QuerySet
 from django.http import HttpRequest
-from .models import Product, Order
+from .models import Product, Order, ProductImage
 from .admin_mixins import ExportAsCSVMixin
 
 
 class OrderInline(admin.TabularInline):  # добавили связь продукта с заказом
     model = Product.orders.through
+
+
+class ProductImagesInline(admin.StackedInline):
+    model = ProductImage
 
 
 @admin.action(description='Archive products')  # действие для архивирования выбранных продуктов
@@ -28,6 +32,7 @@ class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):  # подмешали м
     ]
     inlines = [
         OrderInline,
+        ProductImagesInline,
     ]
     list_display = 'pk', 'name', 'description_short', 'price', 'discount', 'archived'
     list_display_links = 'pk', 'name'  # ссылки
@@ -40,6 +45,9 @@ class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):  # подмешали м
         ('Price options', {  # группа полей price options с полями price и discount но будет скрыта изначально
             'fields': ('price', 'discount'),
             'classes': ('collapse', 'wide'),
+        }),
+        ('Images', {  # группа полей price options с полями price и discount но будет скрыта изначально
+            'fields': ('preview',)
         }),
         ('Extra options', {
             'fields': ('archived',),

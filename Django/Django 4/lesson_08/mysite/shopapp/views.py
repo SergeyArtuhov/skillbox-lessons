@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import Group
 from timeit import default_timer
-from .models import Product, Order
-from .forms import GroupForm
+from .models import Product, Order, ProductImage
+from .forms import GroupForm, ProductForm
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -63,7 +63,7 @@ class GroupsListView(View):
 class ProductDetailView(DetailView):
     template_name = 'shopapp/products-detail.html'
     # model = Product
-    queryset = Product.objects.filter(archived=False)  # чтобы архивные продукты не отображались
+    queryset = Product.objects.filter(archived=False).prefetch_related("images")  # чтобы архивные продукты не отображались
     context_object_name = "product"
 
 
@@ -106,14 +106,25 @@ class ProductCreateView(UserPassesTestMixin, CreateView):
         return self.request.user.is_superuser  # если пользователь СУПЕР то доступ разрешен
 
     model = Product
-    fields = "name", "price", "description", "discount"  # или указываем поля, или указываем форму ниже
+    form_class = ProductForm
+    # fields = "name", "price", "description", "discount", "preview"  # или указываем поля, или указываем форму ниже
     # form_class = ProductForm
     success_url = reverse_lazy("shopapp:products_list")  # ссылки можно генерировать только в View функции поэтому так
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        for image in form.files.getlist("images"):
+            ProductImage.objects.create(
+                product=self.object,
+                image=image
+            )
+        return response
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = "name", "price", "description", "discount"
+    form_class = ProductForm
+    # fields = "name", "price", "description", "discount", "preview"
     template_name_suffix = "_update_form"
 
     def get_success_url(self):  # генерируем ссылку для возврата к деталям товара
@@ -122,6 +133,14 @@ class ProductUpdateView(UpdateView):
             kwargs={"pk": self.object.pk}  # ссылка на pk обьекта который мы обновили
         )
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        for image in form.files.getlist("images"):
+            ProductImage.objects.create(
+                product=self.object,
+                image=image
+            )
+        return response
 
 class ProductDeleteView(DeleteView):
     model = Product
