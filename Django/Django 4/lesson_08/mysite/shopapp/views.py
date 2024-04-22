@@ -108,16 +108,17 @@ class ProductCreateView(UserPassesTestMixin, CreateView):
     model = Product
     form_class = ProductForm
     # fields = "name", "price", "description", "discount", "preview"  # или указываем поля, или указываем форму ниже
-    # form_class = ProductForm
     success_url = reverse_lazy("shopapp:products_list")  # ссылки можно генерировать только в View функции поэтому так
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        for image in form.files.getlist("images"):
+        images = form.cleaned_data["images"]
+        for image in images:
             ProductImage.objects.create(
                 product=self.object,
                 image=image
             )
+
         return response
 
 
@@ -135,11 +136,13 @@ class ProductUpdateView(UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        for image in form.files.getlist("images"):
+        images = form.cleaned_data["images"]
+        for image in images:
             ProductImage.objects.create(
                 product=self.object,
                 image=image
             )
+
         return response
 
 class ProductDeleteView(DeleteView):
