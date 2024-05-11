@@ -11,5 +11,10 @@
             <span> Список пуст </span>
         {% endfor %}
     </ul>
+    <div>
+        <strong>
+            You have {{ items }} cherr{{ items|pluralize:"y,ies" }}
+        </strong>
+    </div>
     {% lorem %}
 {% endblock %}

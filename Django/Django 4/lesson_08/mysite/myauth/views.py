@@ -7,6 +7,26 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, View
 from .models import Profile
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.utils.translation import gettext_lazy as _, ngettext
+
+
+class HelloView(View):
+    welcome_message = _("welcome hello worls!")
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        # welcome_message = _("welcome hello worls!")
+        items_str = request.GET.get("items") or 0
+        items = int(items_str)
+        products_line = ngettext(
+            "one product",
+            "{count} products",
+            items
+        )
+        products_line = products_line.format(count=items)
+        return HttpResponse(
+            f"<h1>{self.welcome_message}</h1>"
+            f"<h2>{products_line}</h2>"
+        )
 
 
 class AboutMeView(TemplateView):
@@ -86,4 +106,3 @@ def get_session_view(request: HttpRequest) -> HttpResponse:
 class FooBarView(View):
     def get(self, request: HttpRequest) -> JsonResponse:
         return JsonResponse({"foo": "bar", "spam": "eggs"})
-

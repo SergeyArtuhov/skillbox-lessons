@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
@@ -14,6 +15,7 @@ class Product(models.Model):
         ordering = ['name', 'price']
         db_table = 'tech_products'
         verbose_name_plural = 'products'
+        verbose_name = _("Product")
 
     name = models.CharField(max_length=100)
     description = models.TextField(null=False, blank=True)
