@@ -24,6 +24,7 @@ from django.conf.urls.i18n import i18n_patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('req/', include('requestdataapp.urls')),
+    path('api/', include('myapiapp.urls'))
 
 ]
 
