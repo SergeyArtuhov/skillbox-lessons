@@ -1,3 +1,9 @@
+"""
+В этом модуле лежат различные наборы представлений.
+
+Разные view интернет-магазина: по товарам, заказам и т.д.
+"""
+
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import Group
@@ -12,9 +18,15 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import ProductSerializer
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 
+@extend_schema(description="Product views CRUD")
 class ProductViewSet(ModelViewSet):
+    """
+    Набор представлений для действий над Product
+    Полный CRUD для сущностей товара
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
@@ -34,6 +46,17 @@ class ProductViewSet(ModelViewSet):
         'price',
         'discount',
     ]
+
+    @extend_schema(
+        summary="Get one product by ID",
+        description="Retrives product, return 404 if not found",
+        responses={
+            200: ProductSerializer,
+            404: OpenApiResponse(description="Empty response, product by id not found"),
+        }
+    )
+    def retrieve(self, *args, **kwargs):
+        return super().retrieve(*args, **kwargs)
 
 
 class ShopIndexView(View):
@@ -90,7 +113,8 @@ class GroupsListView(View):
 class ProductDetailView(DetailView):
     template_name = 'shopapp/products-detail.html'
     # model = Product
-    queryset = Product.objects.filter(archived=False).prefetch_related("images")  # чтобы архивные продукты не отображались
+    queryset = Product.objects.filter(archived=False).prefetch_related(
+        "images")  # чтобы архивные продукты не отображались
     context_object_name = "product"
 
 
@@ -171,6 +195,7 @@ class ProductUpdateView(UpdateView):
             )
 
         return response
+
 
 class ProductDeleteView(DeleteView):
     model = Product
