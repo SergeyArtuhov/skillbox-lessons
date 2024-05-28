@@ -1,0 +1,16 @@
+FROM python:3.10
+# использование образа python 3.10
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+# рабочая директория
+
+COPY requirements.txt requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY mysite .
+
+#CMD ["python", "manage.py", "runserver"]

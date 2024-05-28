@@ -27,7 +27,21 @@ SECRET_KEY = 'django-insecure-dw5#^2_fp@d!jg#o&l+#&zhh*1g)(di2)sd&@u@3i*-o$lm7+%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "0.0.0.0",
+    "127.0.0.1"
+]
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+if DEBUG:
+    import socket
+    hostname, __, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS.append("10.0.2.2")
+    INTERNAL_IPS.extend(
+        [ip[: ip.rfind(".")] + ".1" for ip in ips]
+    )
 
 
 # Application definition
@@ -41,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
     
+    'debug_toolbar',
     'rest_framework',
     'django_filters',
     'drf_spectacular',
@@ -62,7 +77,8 @@ MIDDLEWARE = [
     'requestdataapp.middlewares.set_useragent_on_request_middleware',
     'requestdataapp.middlewares.CountRequestsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.contrib.admindocs.middleware.XViewMiddleware'
+    'django.contrib.admindocs.middleware.XViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -171,24 +187,58 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,  # чтобы не включать инфо о странице кот генерирует доку в саму доку
 }
 
+# Это для SQL запросов:
+# LOGGING = {
+#     'version': 1,
+#     'filters': {
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue'  # спец фильтр который выводит логи только в дебаг режиме
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler'  # выводит все потоком в терминал
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     }
+# }
+
+
+LOGFILE_NAME = BASE_DIR / "log.txt"
+LOGFILE_SIZE = 400  # размер лог файла
+LOGFILE_COUNT = 3  # сколько всего будет лог файлов
+
 LOGGING = {
-    'version': 1,
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue'  # спец фильтр который выводит логи только в дебаг режиме
+    "version": 1,
+    "disable_existing_loggers": False,  # чтобы не отключать существующие логгеры
+    "formatters": {
+        "verbose": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s",  # время, уровень логирования, имя модуля и сообщение
         },
     },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler'  # выводит все потоком в терминал
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose"
         },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
+        "logfile": {
+            "class": "logging.handlers.RotatingFileHandler",
+            # "class": "logging.handlers.TimeRotatingFileHandler",  ротация по дням
+            "filename": LOGFILE_NAME,
+            "maxBytes": LOGFILE_SIZE,
+            "backupCount": LOGFILE_COUNT,
+            "formatter": "verbose",
         }
-    }
+    },
+    "root": {
+        "handlers": ["console", "logfile"],
+        "level": "INFO"
+    },
 }
