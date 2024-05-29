@@ -1,3 +1,15 @@
-2024-05-27 20:40:20,977 [INFO] django.utils.autoreload: Watching for file changes with StatReloader
-2024-05-27 20:40:46,596 [INFO] shopapp.views: Rendering shop index
-2024-05-27 20:40:47,445 [INFO] shopapp.views: Rendering shop index
+2024-05-29 00:47:05,757 [ERROR] django.request: Internal Server Error: /ru/shop/products/export/
+Traceback (most recent call last):
+  File "/Users/artuhovse/PycharmProjects/skillbox-lessons/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/artuhovse/PycharmProjects/skillbox-lessons/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/artuhovse/PycharmProjects/skillbox-lessons/venv/lib/python3.10/site-packages/sentry_sdk/integrations/django/views.py", line 84, in sentry_wrapped_callback
+    return callback(request, *args, **kwargs)
+  File "/Users/artuhovse/PycharmProjects/skillbox-lessons/venv/lib/python3.10/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/artuhovse/PycharmProjects/skillbox-lessons/venv/lib/python3.10/site-packages/django/views/generic/base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/artuhovse/PycharmProjects/skillbox-lessons/Django/Django 4/lesson_08/mysite/shopapp/views.py", line 265, in get
+    name = elem["naem"]
+KeyError: 'naem'
