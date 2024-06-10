@@ -56,4 +56,7 @@ class ProductForm(forms.ModelForm):
 
 
 class CSVImportForm(forms.Form):
+    """
+    Создаем новую форму для загрузки csv файла
+    """
     csv_file = forms.FileField()

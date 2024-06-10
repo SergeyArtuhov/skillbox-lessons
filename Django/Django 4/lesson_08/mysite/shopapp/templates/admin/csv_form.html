@@ -1,5 +1,5 @@
-{% extends 'admin/base/html' %}
-
+{% extends 'admin/base.html' %}
+<!-- Загружаем base.html из модуля админки-->
 {% block content %}
 {% load admin_urls %}
     <div>
@@ -7,6 +7,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <div class="submit-row">
+                <!-- Класс submit-row позволяет применить стиль кнопки как в админке-->
                 <input type="submit" value="Upload CSV">
             </div>
         </form>

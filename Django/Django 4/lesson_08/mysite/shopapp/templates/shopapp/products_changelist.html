@@ -1,10 +1,10 @@
 {% extends 'admin/change_list.html' %}
-
+<!-- эта страница которая выводит список продуктов в админке. Это мы делаем чтобы добавить кнопку-->
 {% block object-tools-items %}
     <li>
         <a href="{% url 'admin:import_products_csv %}" class="addlink">
             Import CSV
         </a>
     </li>
-    {{ block.super }}
+    {{ block.super }} <!-- продолжаем этот блок родительским контентом -->
 {% endblock %}
