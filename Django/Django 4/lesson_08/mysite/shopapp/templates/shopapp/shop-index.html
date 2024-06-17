@@ -1,4 +1,6 @@
 {% extends "shopapp/base.html" %}
+{% load cache %}
+
 {% block title %}
     Свой заголовок
 {% endblock  %}
@@ -16,5 +18,7 @@
             You have {{ items }} cherr{{ items|pluralize:"y,ies" }}
         </strong>
     </div>
-    {% lorem %}
+    {% cache 100 lorem %}
+    {% lorem 3 p random %}
+    {% endcache %}
 {% endblock %}

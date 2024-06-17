@@ -2,7 +2,7 @@
 <!-- эта страница которая выводит список продуктов в админке. Это мы делаем чтобы добавить кнопку-->
 {% block object-tools-items %}
     <li>
-        <a href="{% url 'admin:import_products_csv %}" class="addlink">
+        <a href="{% url 'admin:import_products_csv' %}" class="addlink">
             Import CSV
         </a>
     </li>

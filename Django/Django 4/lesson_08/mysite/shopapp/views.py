@@ -26,6 +26,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import ProductSerializer
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from .common import save_csv_products
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 log = logging.getLogger(__name__)
 
@@ -66,6 +69,11 @@ class ProductViewSet(ModelViewSet):
     )
     def retrieve(self, *args, **kwargs):
         return super().retrieve(*args, **kwargs)
+
+    @method_decorator(cache_page(60 * 2))
+    def list(self, *args, **kwargs):  #  переопределяем метод для получения списка
+        print("hello products list")
+        return super().list(*args, **kwargs)
 
     @action(methods=["get"],
             detail=False)  # False укажет что путь к download_csv на основе адресов для списка элементов
@@ -109,7 +117,9 @@ class ProductViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
+
 class ShopIndexView(View):
+    # @method_decorator(cache_page(60 * 2)) можно так или в urls.py
     def get(self, request: HttpRequest) -> HttpResponse:
         products = [
             ('Laptop', 999),
@@ -297,17 +307,21 @@ class OrderDetailView(PermissionRequiredMixin, DetailView):
 
 class ProductsDataExportView(View):
     def get(self, request: HttpRequest) -> JsonResponse:
-        products = Product.objects.order_by("pk").all()
-        products_data = [
-            {
-                "pk": product.pk,
-                "name": product.name,
-                "price": product.price,
-                "archived": product.archived
-            }
-            for product in products
-        ]
-        elem = products_data[0]
-        name = elem["naem"]
-        print(name)
+        cache_key = "products_data_export"
+        products_data = cache.get(cache_key)
+        if products_data is None:
+            products = Product.objects.order_by("pk").all()
+            products_data = [
+                {
+                    "pk": product.pk,
+                    "name": product.name,
+                    "price": product.price,
+                    "archived": product.archived
+                }
+                for product in products
+            ]
+            cache.set(cache_key, products_data, 300)
+        # elem = products_data[0]
+        # name = elem["naem"]
+        # print(name)
         return JsonResponse({"products": products_data})
